@@ -692,6 +692,84 @@
       background: linear-gradient(90deg, var(--gold), var(--gold-2));
     }
 
+    .strategy-section {
+      margin-top: 16px;
+    }
+
+    .strategy-grid {
+      padding: 16px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .strategy-card {
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, .035);
+      border-radius: 8px;
+      overflow: hidden;
+      min-width: 0;
+    }
+
+    .strategy-card h4 {
+      margin: 0;
+      padding: 12px 12px 0;
+      font-size: 14px;
+    }
+
+    .strategy-card p {
+      margin: 7px 12px 10px;
+      color: #c7d0d0;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .strategy-chart {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      background:
+        linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px),
+        #596066;
+      background-size: 25% 25%, 25% 25%;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .strategy-chart svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .strategy-steps {
+      display: grid;
+      gap: 7px;
+      padding: 12px;
+    }
+
+    .strategy-step {
+      display: grid;
+      grid-template-columns: 22px 1fr;
+      gap: 8px;
+      align-items: start;
+      color: #dce3e3;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .strategy-step span:first-child {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--gold);
+      color: #101516;
+      font-size: 11px;
+      font-weight: 820;
+    }
+
     .stack {
       display: grid;
       gap: 16px;
@@ -951,6 +1029,10 @@
       .portfolio-section {
         grid-template-columns: 1fr;
       }
+
+      .strategy-grid {
+        grid-template-columns: 1fr;
+      }
     }
 
     @media (max-width: 860px) {
@@ -971,6 +1053,7 @@
 
       .grid,
       .portfolio-section,
+      .strategy-grid,
       .side {
         grid-template-columns: 1fr;
       }
@@ -1242,6 +1325,106 @@
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section class="panel strategy-section" aria-label="SMC 策略圖解">
+        <div class="panel-head">
+          <div>
+            <h3>SMC 策略圖解</h3>
+            <small>把講義提到的掃流動性、BOS/MSS、OB、進場、止損與目標畫成交易路徑</small>
+          </div>
+          <small>Playbook</small>
+        </div>
+        <div class="strategy-grid">
+          <article class="strategy-card">
+            <h4>劇本 A：趨勢延續做多</h4>
+            <p>高週期維持上升結構，等待價格掃低點後回到 Discount / OB，再用小級別 BOS 確認。</p>
+            <div class="strategy-chart">
+              <svg viewBox="0 0 640 400" role="img" aria-label="SMC bullish continuation playbook">
+                <rect x="0" y="245" width="640" height="155" fill="rgba(103,215,213,.13)"/>
+                <rect x="0" y="0" width="640" height="130" fill="rgba(179,160,190,.18)"/>
+                <line x1="28" y1="205" x2="612" y2="205" stroke="rgba(255,255,255,.45)" stroke-dasharray="8 8"/>
+                <polyline points="44,320 120,248 185,270 250,178 318,235 360,312 408,238 465,188 520,118 592,88" fill="none" stroke="#f4f7f4" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                <line x1="222" y1="178" x2="342" y2="178" stroke="#67d7d5" stroke-width="3" stroke-dasharray="7 7"/>
+                <rect x="318" y="286" width="120" height="56" fill="rgba(215,189,98,.20)" stroke="#d7bd62" stroke-width="2"/>
+                <line x1="335" y1="346" x2="455" y2="346" stroke="#f05a5a" stroke-width="3"/>
+                <line x1="500" y1="88" x2="606" y2="88" stroke="#42c778" stroke-width="3"/>
+                <text x="45" y="34" fill="#b3a0be" font-size="18" font-weight="700">Premium：目標 / 減碼</text>
+                <text x="40" y="378" fill="#67d7d5" font-size="18" font-weight="700">Discount：找多</text>
+                <text x="234" y="166" fill="#67d7d5" font-size="18" font-weight="800">BOS</text>
+                <text x="326" y="280" fill="#efe27b" font-size="16" font-weight="800">OB 回測</text>
+                <text x="348" y="366" fill="#f05a5a" font-size="15" font-weight="800">SL</text>
+                <text x="505" y="78" fill="#42c778" font-size="15" font-weight="800">TP 流動性</text>
+                <circle cx="360" cy="312" r="9" fill="#f05a5a"/>
+                <text x="382" y="319" fill="#fff" font-size="14" font-weight="700">掃低後收回</text>
+              </svg>
+            </div>
+            <div class="strategy-steps">
+              <div class="strategy-step"><span>1</span><span>確認 HTF 是 HH/HL，不逆大結構。</span></div>
+              <div class="strategy-step"><span>2</span><span>等價格掃掉前低流動性並快速收回。</span></div>
+              <div class="strategy-step"><span>3</span><span>回測 OB 時進場，SL 放 OB 下緣，TP 看前高流動性。</span></div>
+            </div>
+          </article>
+
+          <article class="strategy-card">
+            <h4>劇本 B：掃高反轉做空</h4>
+            <p>價格先衝進 Premium 掃高點，接著跌破結構形成 MSS；回測供給 OB 時找空。</p>
+            <div class="strategy-chart">
+              <svg viewBox="0 0 640 400" role="img" aria-label="SMC bearish reversal playbook">
+                <rect x="0" y="0" width="640" height="155" fill="rgba(179,160,190,.20)"/>
+                <rect x="0" y="250" width="640" height="150" fill="rgba(103,215,213,.12)"/>
+                <line x1="28" y1="205" x2="612" y2="205" stroke="rgba(255,255,255,.45)" stroke-dasharray="8 8"/>
+                <polyline points="46,305 116,230 180,258 250,156 315,88 372,170 438,265 500,212 585,318" fill="none" stroke="#f4f7f4" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                <line x1="238" y1="156" x2="340" y2="156" stroke="#efe27b" stroke-width="3"/>
+                <rect x="360" y="140" width="120" height="58" fill="rgba(240,90,90,.17)" stroke="#f05a5a" stroke-width="2"/>
+                <line x1="380" y1="265" x2="505" y2="265" stroke="#f05a5a" stroke-width="3" stroke-dasharray="7 7"/>
+                <line x1="520" y1="332" x2="612" y2="332" stroke="#42c778" stroke-width="3"/>
+                <text x="38" y="34" fill="#b3a0be" font-size="18" font-weight="700">Premium：掃高 / 找空</text>
+                <text x="380" y="132" fill="#f05a5a" font-size="16" font-weight="800">供給 OB</text>
+                <text x="248" y="146" fill="#efe27b" font-size="16" font-weight="800">Liquidity Grab</text>
+                <text x="392" y="256" fill="#f05a5a" font-size="18" font-weight="800">MSS</text>
+                <text x="418" y="184" fill="#fff" font-size="14" font-weight="700">回測進場</text>
+                <text x="525" y="352" fill="#42c778" font-size="15" font-weight="800">TP 下方流動性</text>
+                <circle cx="315" cy="88" r="9" fill="#efe27b"/>
+                <circle cx="500" cy="212" r="9" fill="#f05a5a"/>
+              </svg>
+            </div>
+            <div class="strategy-steps">
+              <div class="strategy-step"><span>1</span><span>價格進 Premium 後掃掉前高，先不要追多。</span></div>
+              <div class="strategy-step"><span>2</span><span>跌破前一個有效低點，確認 MSS。</span></div>
+              <div class="strategy-step"><span>3</span><span>回測供給 OB 找空，SL 放掃高點上方，TP 看下方流動性。</span></div>
+            </div>
+          </article>
+
+          <article class="strategy-card">
+            <h4>劇本 C：盤整等待突破</h4>
+            <p>行情在區間累積訂單時，不急著進場；等一側流動性被掃，再看 BOS 或 MSS 決定方向。</p>
+            <div class="strategy-chart">
+              <svg viewBox="0 0 640 400" role="img" aria-label="SMC consolidation expansion playbook">
+                <rect x="86" y="92" width="360" height="178" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.28)" stroke-width="2"/>
+                <line x1="86" y1="92" x2="446" y2="92" stroke="#efe27b" stroke-width="3"/>
+                <line x1="86" y1="270" x2="446" y2="270" stroke="#67d7d5" stroke-width="3"/>
+                <polyline points="50,220 95,148 142,238 190,124 240,252 292,136 338,228 388,112 432,268 480,188 560,100 612,76" fill="none" stroke="#f4f7f4" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                <rect x="430" y="246" width="86" height="48" fill="rgba(215,189,98,.18)" stroke="#d7bd62" stroke-width="2"/>
+                <line x1="438" y1="112" x2="568" y2="112" stroke="#42c778" stroke-width="3" stroke-dasharray="7 7"/>
+                <line x1="518" y1="76" x2="612" y2="76" stroke="#42c778" stroke-width="3"/>
+                <text x="96" y="82" fill="#efe27b" font-size="16" font-weight="800">上緣流動性</text>
+                <text x="96" y="292" fill="#67d7d5" font-size="16" font-weight="800">下緣流動性</text>
+                <text x="170" y="190" fill="#fff" font-size="22" font-weight="800">Consolidation</text>
+                <text x="448" y="240" fill="#efe27b" font-size="15" font-weight="800">突破後 OB</text>
+                <text x="470" y="104" fill="#42c778" font-size="17" font-weight="800">BOS</text>
+                <text x="520" y="66" fill="#42c778" font-size="15" font-weight="800">Expansion TP</text>
+                <circle cx="432" cy="268" r="9" fill="#67d7d5"/>
+                <text x="452" y="287" fill="#fff" font-size="14" font-weight="700">先掃下緣</text>
+              </svg>
+            </div>
+            <div class="strategy-steps">
+              <div class="strategy-step"><span>1</span><span>盤整中只標區間高低，避免在中間追單。</span></div>
+              <div class="strategy-step"><span>2</span><span>觀察哪一側流動性先被掃，等待方向確認。</span></div>
+              <div class="strategy-step"><span>3</span><span>突破後回測 OB 才進場，目標看下一段 expansion。</span></div>
+            </div>
+          </article>
         </div>
       </section>
 
