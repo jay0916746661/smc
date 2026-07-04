@@ -367,6 +367,112 @@
     .anno-liq { left: 64%; top: 18%; color: var(--purple); }
     .anno-entry { left: 68%; top: 65%; color: var(--green); }
 
+    .live-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .live-symbol {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .live-symbol strong {
+      color: var(--text);
+      font-size: 14px;
+    }
+
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 0 5px rgba(66, 199, 120, .14);
+    }
+
+    .live-chart {
+      width: 100%;
+      height: 500px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: #101516;
+      overflow: hidden;
+      position: relative;
+    }
+
+    #tradingview-live-chart,
+    #tradingview-live-chart iframe {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .live-fallback {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      text-align: center;
+      color: var(--muted);
+      background:
+        linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px),
+        #151b1d;
+      background-size: 100% 20%, 12.5% 100%;
+    }
+
+    .live-fallback strong {
+      display: block;
+      color: var(--gold);
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
+
+    .ticker-tape {
+      margin-top: 10px;
+      min-height: 72px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #111718;
+      overflow: hidden;
+    }
+
+    .smc-live-notes {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .smc-note {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px;
+      background: rgba(255, 255, 255, .035);
+      min-height: 76px;
+    }
+
+    .smc-note span {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+      margin-bottom: 6px;
+    }
+
+    .smc-note strong {
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
     .kpi-row {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -742,6 +848,7 @@
 
       .kpi-row,
       .macro-grid,
+      .smc-live-notes,
       .source-strip {
         grid-template-columns: repeat(2, 1fr);
       }
@@ -755,6 +862,7 @@
       .two,
       .kpi-row,
       .macro-grid,
+      .smc-live-notes,
       .source-strip {
         grid-template-columns: 1fr;
       }
@@ -787,46 +895,46 @@
       <div class="watchlist" id="watchlist">
         <div class="market-group">
           <div class="market-group-title"><span>Macro</span><span>大行情</span></div>
-          <button class="symbol active" data-symbol="全球風險盤" data-market="大行情" data-trend="風險偏多" data-score="74" data-scenario="美股維持 BOS，台股跟隨但需觀察匯率與權值股流動性，加密偏向高 beta 延伸。">
+          <button class="symbol active" data-symbol="全球風險盤" data-market="大行情" data-tv-symbol="AMEX:SPY" data-trend="風險偏多" data-score="74" data-scenario="美股維持 BOS，台股跟隨但需觀察匯率與權值股流動性，加密偏向高 beta 延伸。">
             <strong>全球風險盤</strong><span class="badge up">Risk On</span><small>美股 / 台股 / 加密同向掃描</small>
           </button>
         </div>
 
         <div class="market-group">
           <div class="market-group-title"><span>US Equity</span><span>美股</span></div>
-          <button class="symbol" data-symbol="SPY" data-market="美股" data-trend="看多延續" data-score="78" data-scenario="SPY 日線結構仍偏多，等待回踩 Discount 或前高流動性被掃後確認。">
+          <button class="symbol" data-symbol="SPY" data-market="美股" data-tv-symbol="AMEX:SPY" data-trend="看多延續" data-score="78" data-scenario="SPY 日線結構仍偏多，等待回踩 Discount 或前高流動性被掃後確認。">
             <strong>SPY</strong><span class="badge up">+0.8%</span><small>S&P 500 結構延續</small>
           </button>
-          <button class="symbol" data-symbol="QQQ" data-market="美股" data-trend="高位掃單" data-score="69" data-scenario="QQQ 接近 Premium 區，留意先掃高點後的 MSS，避免在溢價區追多。">
+          <button class="symbol" data-symbol="QQQ" data-market="美股" data-tv-symbol="NASDAQ:QQQ" data-trend="高位掃單" data-score="69" data-scenario="QQQ 接近 Premium 區，留意先掃高點後的 MSS，避免在溢價區追多。">
             <strong>QQQ</strong><span class="badge flat">+0.2%</span><small>科技股高位流動性</small>
           </button>
-          <button class="symbol" data-symbol="NVDA" data-market="美股" data-trend="強勢但過熱" data-score="62" data-scenario="NVDA 仍是強勢結構，但價格離 OB 遠，較適合等回踩或掃單後再找計畫。">
+          <button class="symbol" data-symbol="NVDA" data-market="美股" data-tv-symbol="NASDAQ:NVDA" data-trend="強勢但過熱" data-score="62" data-scenario="NVDA 仍是強勢結構，但價格離 OB 遠，較適合等回踩或掃單後再找計畫。">
             <strong>NVDA</strong><span class="badge up">+1.6%</span><small>強勢股等待回踩</small>
           </button>
         </div>
 
         <div class="market-group">
           <div class="market-group-title"><span>Taiwan Equity</span><span>台股</span></div>
-          <button class="symbol" data-symbol="加權指數" data-market="台股" data-trend="跟隨美股" data-score="71" data-scenario="台股加權跟隨美股風險偏好，若開高進 Premium 區，先等盤中流動性掃完。">
+          <button class="symbol" data-symbol="加權指數" data-market="台股" data-tv-symbol="TWSE:TAIEX" data-trend="跟隨美股" data-score="71" data-scenario="台股加權跟隨美股風險偏好，若開高進 Premium 區，先等盤中流動性掃完。">
             <strong>加權指數</strong><span class="badge up">+0.7%</span><small>權值股推動結構</small>
           </button>
-          <button class="symbol" data-symbol="台積電" data-market="台股" data-trend="主結構偏多" data-score="76" data-scenario="台積電仍是台股主結構核心，回到折價區且守住 OB 時優先追蹤多方延續。">
+          <button class="symbol" data-symbol="台積電" data-market="台股" data-tv-symbol="TWSE:2330" data-trend="主結構偏多" data-score="76" data-scenario="台積電仍是台股主結構核心，回到折價區且守住 OB 時優先追蹤多方延續。">
             <strong>台積電</strong><span class="badge up">+1.2%</span><small>OB 回測觀察</small>
           </button>
-          <button class="symbol" data-symbol="電子期" data-market="台股" data-trend="盤整待破" data-score="58" data-scenario="電子期在區間內整理，等待上緣或下緣流動性先被掃，再判斷 BOS/MSS。">
+          <button class="symbol" data-symbol="電子期" data-market="台股" data-tv-symbol="TAIFEX:EXF1!" data-trend="盤整待破" data-score="58" data-scenario="電子期在區間內整理，等待上緣或下緣流動性先被掃，再判斷 BOS/MSS。">
             <strong>電子期</strong><span class="badge flat">0.1%</span><small>區間兩端流動性</small>
           </button>
         </div>
 
         <div class="market-group">
           <div class="market-group-title"><span>Crypto</span><span>加密</span></div>
-          <button class="symbol" data-symbol="ETHUSDT" data-market="加密" data-trend="看多延續" data-score="78" data-scenario="ETHUSDT BOS 後回踩 Discount，若小級別重新轉強，可接續看多劇本。">
+          <button class="symbol" data-symbol="ETHUSDT" data-market="加密" data-tv-symbol="BINANCE:ETHUSDT" data-trend="看多延續" data-score="78" data-scenario="ETHUSDT BOS 後回踩 Discount，若小級別重新轉強，可接續看多劇本。">
             <strong>ETHUSDT</strong><span class="badge up">+2.4%</span><small>BOS 後回踩 Discount</small>
           </button>
-          <button class="symbol" data-symbol="BTCUSDT" data-market="加密" data-trend="盤整待破" data-score="54" data-scenario="BTCUSDT 流動性仍在區間兩側，先觀察掃高或掃低後是否出現明確結構。">
+          <button class="symbol" data-symbol="BTCUSDT" data-market="加密" data-tv-symbol="BINANCE:BTCUSDT" data-trend="盤整待破" data-score="54" data-scenario="BTCUSDT 流動性仍在區間兩側，先觀察掃高或掃低後是否出現明確結構。">
             <strong>BTCUSDT</strong><span class="badge flat">0.3%</span><small>流動性仍在區間兩側</small>
           </button>
-          <button class="symbol" data-symbol="SOLUSDT" data-market="加密" data-trend="疑似反轉" data-score="65" data-scenario="SOLUSDT 已有 MSS 線索，等待回到 OB 或 FVG 再確認空方/多方是否接手。">
+          <button class="symbol" data-symbol="SOLUSDT" data-market="加密" data-tv-symbol="BINANCE:SOLUSDT" data-trend="疑似反轉" data-score="65" data-scenario="SOLUSDT 已有 MSS 線索，等待回到 OB 或 FVG 再確認空方/多方是否接手。">
             <strong>SOLUSDT</strong><span class="badge down">-1.1%</span><small>MSS 後等待 OB 測試</small>
           </button>
         </div>
@@ -888,30 +996,34 @@
             <small>SMC / BOS / MSS / OB</small>
           </div>
           <div class="chart-wrap">
-            <div class="chart">
-              <div class="zone premium"></div>
-              <div class="zone discount"></div>
-              <div class="zone-label top">Premium Zone：偏空觀察</div>
-              <div class="zone-label bottom">Discount Zone：偏多觀察</div>
-              <svg viewBox="0 0 1000 500" preserveAspectRatio="none" aria-label="SMC market structure chart">
-                <polyline points="30,390 95,320 145,350 210,245 280,280 360,190 425,225 485,330 560,255 620,280 675,175 735,245 805,210 875,118 960,160" fill="none" stroke="rgba(255,255,255,.92)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-                <line x1="178" y1="246" x2="355" y2="246" stroke="#67d7d5" stroke-width="3" stroke-dasharray="6 7"/>
-                <line x1="365" y1="330" x2="560" y2="330" stroke="#f05a5a" stroke-width="3" stroke-dasharray="7 8"/>
-                <rect x="310" y="350" width="190" height="78" fill="rgba(215,189,98,.16)" stroke="#d7bd62" stroke-width="2"/>
-                <rect x="650" y="76" width="170" height="62" fill="rgba(179,160,190,.20)" stroke="#b3a0be" stroke-width="2"/>
-                <rect x="680" y="306" width="126" height="54" fill="rgba(103,215,213,.16)" stroke="#67d7d5" stroke-width="2"/>
-                <line x1="875" y1="118" x2="875" y2="55" stroke="#efe27b" stroke-width="2"/>
-                <line x1="820" y1="118" x2="928" y2="118" stroke="#efe27b" stroke-width="2"/>
-                <g opacity=".92">
-                  <line x1="742" y1="205" x2="742" y2="295" stroke="#f05a5a" stroke-width="2"/>
-                  <line x1="704" y1="292" x2="788" y2="292" stroke="#f05a5a" stroke-width="2"/>
-                </g>
-              </svg>
-              <span class="annotation anno-bos">BOS<br>結構延續</span>
-              <span class="annotation anno-mss">MSS<br>結構反轉</span>
-              <span class="annotation anno-ob">OB<br>止損點位</span>
-              <span class="annotation anno-liq">Liquidity Grab<br>掃高點</span>
-              <span class="annotation anno-entry">Entry<br>回踩測試</span>
+            <div class="live-toolbar">
+              <div class="live-symbol">
+                <span class="live-dot"></span>
+                <strong id="liveSymbolName">AMEX:SPY</strong>
+                <span id="liveStatus">即時圖表載入中</span>
+              </div>
+              <div class="controls" id="chartInterval">
+                <button class="chip" data-interval="15">15m</button>
+                <button class="chip active" data-interval="60">1H</button>
+                <button class="chip" data-interval="240">4H</button>
+                <button class="chip" data-interval="D">1D</button>
+              </div>
+            </div>
+            <div class="live-chart">
+              <div id="tradingview-live-chart"></div>
+              <div class="live-fallback" id="liveFallback">
+                <div>
+                  <strong>等待即時行情元件</strong>
+                  <span>需要網路連線載入 TradingView；載入後會顯示可縮放、可切週期的即時 K 線。</span>
+                </div>
+              </div>
+            </div>
+            <div class="ticker-tape" id="tickerTape"></div>
+            <div class="smc-live-notes">
+              <div class="smc-note"><span>BOS / MSS</span><strong>在即時圖上確認結構延續或反轉，不再依賴靜態示意線。</strong></div>
+              <div class="smc-note"><span>Liquidity</span><strong>觀察前高/前低是否被掃，確認是否只是追單陷阱。</strong></div>
+              <div class="smc-note"><span>Premium / Discount</span><strong>用目前波段中線判斷追價風險，折價找多、溢價找空。</strong></div>
+              <div class="smc-note"><span>Order Block</span><strong>把回測區變成實際止損點，而不是用感覺停損。</strong></div>
             </div>
             <div class="kpi-row">
               <div class="kpi"><span>結構狀態</span><strong id="trendValue">風險偏多</strong><em id="trendNote">美股主導，台股與加密跟隨</em></div>
@@ -1039,6 +1151,11 @@
     const trendNote = document.querySelector("#trendNote");
     const marketConfirm = document.querySelector("#marketConfirm");
     const marketNote = document.querySelector("#marketNote");
+    const liveSymbolName = document.querySelector("#liveSymbolName");
+    const liveStatus = document.querySelector("#liveStatus");
+    const liveFallback = document.querySelector("#liveFallback");
+    let currentTvSymbol = "AMEX:SPY";
+    let currentInterval = "60";
 
     const marketCopy = {
       "大行情": {
@@ -1063,6 +1180,98 @@
       }
     };
 
+    function loadTradingView() {
+      return new Promise((resolve, reject) => {
+        if (window.TradingView) {
+          resolve();
+          return;
+        }
+
+        const existing = document.querySelector('script[data-tv-library="true"]');
+        if (existing) {
+          existing.addEventListener("load", resolve, { once: true });
+          existing.addEventListener("error", reject, { once: true });
+          return;
+        }
+
+        const script = document.createElement("script");
+        script.src = "https://s3.tradingview.com/tv.js";
+        script.async = true;
+        script.dataset.tvLibrary = "true";
+        script.onload = resolve;
+        script.onerror = reject;
+        document.head.appendChild(script);
+      });
+    }
+
+    function renderLiveChart(symbol = currentTvSymbol, interval = currentInterval) {
+      currentTvSymbol = symbol;
+      currentInterval = interval;
+      liveSymbolName.textContent = symbol;
+      liveStatus.textContent = "即時圖表載入中";
+      liveFallback.style.display = "grid";
+
+      loadTradingView()
+        .then(() => {
+          document.querySelector("#tradingview-live-chart").innerHTML = "";
+          new TradingView.widget({
+            autosize: true,
+            symbol,
+            interval,
+            timezone: "Asia/Taipei",
+            theme: "dark",
+            style: "1",
+            locale: "zh_TW",
+            toolbar_bg: "#101516",
+            enable_publishing: false,
+            allow_symbol_change: true,
+            withdateranges: true,
+            hide_side_toolbar: false,
+            studies: ["Volume@tv-basicstudies"],
+            container_id: "tradingview-live-chart"
+          });
+          liveStatus.textContent = "即時資料";
+          liveFallback.style.display = "none";
+        })
+        .catch(() => {
+          liveStatus.textContent = "即時圖表載入失敗，請確認網路連線";
+          liveFallback.style.display = "grid";
+        });
+    }
+
+    function renderTickerTape() {
+      const container = document.querySelector("#tickerTape");
+      container.innerHTML = "";
+      const widgetContainer = document.createElement("div");
+      widgetContainer.className = "tradingview-widget-container";
+      const widget = document.createElement("div");
+      widget.className = "tradingview-widget-container__widget";
+      widgetContainer.appendChild(widget);
+
+      const script = document.createElement("script");
+      script.src = "https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js";
+      script.async = true;
+      script.textContent = JSON.stringify({
+        symbols: [
+          { proName: "AMEX:SPY", title: "SPY" },
+          { proName: "NASDAQ:QQQ", title: "QQQ" },
+          { proName: "NASDAQ:NVDA", title: "NVDA" },
+          { proName: "TWSE:TAIEX", title: "台股加權" },
+          { proName: "TWSE:2330", title: "台積電" },
+          { proName: "BINANCE:BTCUSDT", title: "BTC" },
+          { proName: "BINANCE:ETHUSDT", title: "ETH" },
+          { proName: "BINANCE:SOLUSDT", title: "SOL" }
+        ],
+        showSymbolLogo: true,
+        colorTheme: "dark",
+        isTransparent: true,
+        displayMode: "adaptive",
+        locale: "zh_TW"
+      });
+      widgetContainer.appendChild(script);
+      container.appendChild(widgetContainer);
+    }
+
     symbols.forEach((button) => {
       button.addEventListener("click", () => {
         symbols.forEach((item) => item.classList.remove("active"));
@@ -1079,13 +1288,19 @@
         marketConfirm.textContent = copy.confirm;
         marketNote.textContent = copy.note;
         scenarioText.textContent = `目前劇本：${button.dataset.scenario}`;
+        renderLiveChart(button.dataset.tvSymbol || "AMEX:SPY", currentInterval);
       });
     });
 
-    document.querySelectorAll(".chip").forEach((chip) => {
-      chip.addEventListener("click", () => {
-        document.querySelectorAll(".chip").forEach((item) => item.classList.remove("active"));
-        chip.classList.add("active");
+    document.querySelectorAll(".controls").forEach((group) => {
+      group.querySelectorAll(".chip").forEach((chip) => {
+        chip.addEventListener("click", () => {
+          group.querySelectorAll(".chip").forEach((item) => item.classList.remove("active"));
+          chip.classList.add("active");
+          if (group.id === "chartInterval") {
+            renderLiveChart(currentTvSymbol, chip.dataset.interval || "60");
+          }
+        });
       });
     });
 
@@ -1112,6 +1327,8 @@
 
     boxes.forEach((box) => box.addEventListener("change", updateScore));
     updateScore();
+    renderTickerTape();
+    renderLiveChart(currentTvSymbol, currentInterval);
   </script>
 </body>
 </html>
