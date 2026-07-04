@@ -1,0 +1,1117 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SMC 行情追蹤面板</title>
+  <style>
+    :root {
+      --bg: #101516;
+      --panel: #171d1f;
+      --panel-2: #1e2528;
+      --line: #303a3d;
+      --muted: #9aa3a3;
+      --text: #eef3ef;
+      --gold: #d7bd62;
+      --gold-2: #efe27b;
+      --teal: #67d7d5;
+      --green: #42c778;
+      --red: #f05a5a;
+      --purple: #b3a0be;
+      --shadow: 0 18px 50px rgba(0, 0, 0, .28);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at 15% 8%, rgba(215, 189, 98, .10), transparent 25%),
+        linear-gradient(135deg, #0f1415 0%, #151c1f 56%, #0f1415 100%);
+      color: var(--text);
+      font-family: Inter, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", Arial, sans-serif;
+      letter-spacing: 0;
+    }
+
+    button, input, select, textarea {
+      font: inherit;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 260px minmax(0, 1fr) 340px;
+    }
+
+    .rail {
+      border-right: 1px solid var(--line);
+      background: rgba(11, 15, 16, .78);
+      padding: 22px 18px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: auto;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .mark {
+      width: 38px;
+      height: 38px;
+      border: 1px solid rgba(215, 189, 98, .60);
+      transform: rotate(45deg);
+      position: relative;
+    }
+
+    .mark:before,
+    .mark:after {
+      content: "";
+      position: absolute;
+      background: rgba(215, 189, 98, .55);
+    }
+
+    .mark:before {
+      width: 1px;
+      height: 32px;
+      top: 2px;
+      left: 18px;
+    }
+
+    .mark:after {
+      width: 32px;
+      height: 1px;
+      top: 18px;
+      left: 2px;
+    }
+
+    .brand h1 {
+      font-size: 17px;
+      line-height: 1.2;
+      margin: 0;
+      font-weight: 760;
+    }
+
+    .brand span {
+      color: var(--gold-2);
+    }
+
+    .nav-title {
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      margin: 24px 0 10px;
+    }
+
+    .watchlist {
+      display: grid;
+      gap: 8px;
+    }
+
+    .market-group {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .market-group-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      padding: 0 2px;
+    }
+
+    .market-group-title span:last-child {
+      color: var(--gold);
+      font-weight: 760;
+      letter-spacing: 0;
+      text-transform: none;
+    }
+
+    .symbol {
+      border: 1px solid transparent;
+      border-radius: 8px;
+      padding: 11px;
+      background: rgba(255, 255, 255, .035);
+      color: var(--text);
+      cursor: pointer;
+      text-align: left;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 4px;
+    }
+
+    .symbol.active {
+      border-color: rgba(215, 189, 98, .72);
+      background: rgba(215, 189, 98, .10);
+    }
+
+    .symbol strong {
+      font-size: 14px;
+    }
+
+    .symbol small {
+      color: var(--muted);
+      font-size: 12px;
+      grid-column: 1 / -1;
+    }
+
+    .badge {
+      min-width: 46px;
+      text-align: right;
+      font-size: 12px;
+      font-weight: 720;
+    }
+
+    .up { color: var(--green); }
+    .down { color: var(--red); }
+    .flat { color: var(--gold); }
+
+    .flow {
+      display: grid;
+      gap: 10px;
+    }
+
+    .flow-step {
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 10px;
+      align-items: start;
+      color: #c9d0d0;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .num {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: #101516;
+      background: var(--gold);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    main {
+      padding: 22px;
+      min-width: 0;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 16px;
+    }
+
+    .title-group h2 {
+      margin: 0 0 5px;
+      font-size: clamp(24px, 3.5vw, 42px);
+      line-height: 1.05;
+      font-weight: 840;
+    }
+
+    .title-group p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .chip {
+      border: 1px solid var(--line);
+      color: #dce3e3;
+      background: rgba(255, 255, 255, .04);
+      padding: 9px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .chip.active {
+      color: #111;
+      border-color: var(--gold);
+      background: var(--gold);
+      font-weight: 760;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.7fr) minmax(300px, .9fr);
+      gap: 16px;
+      align-items: start;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(31, 38, 40, .96), rgba(21, 27, 29, .96));
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .panel-head {
+      min-height: 58px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      gap: 12px;
+    }
+
+    .panel-head h3 {
+      margin: 0;
+      font-size: 15px;
+      letter-spacing: 0;
+    }
+
+    .panel-head small {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .chart-wrap {
+      padding: 14px;
+      min-height: 520px;
+    }
+
+    .chart {
+      width: 100%;
+      height: 500px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,.08);
+      background:
+        linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px),
+        #63686f;
+      background-size: 100% 20%, 12.5% 100%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .chart svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .zone {
+      position: absolute;
+      left: 0;
+      right: 0;
+      pointer-events: none;
+    }
+
+    .zone.premium {
+      top: 0;
+      height: 42%;
+      background: rgba(179, 160, 190, .18);
+      border-bottom: 1px solid rgba(238, 226, 123, .72);
+    }
+
+    .zone.discount {
+      bottom: 0;
+      height: 42%;
+      background: rgba(103, 215, 213, .13);
+      border-top: 1px solid rgba(103, 215, 213, .75);
+    }
+
+    .zone-label {
+      position: absolute;
+      right: 16px;
+      padding: 8px 10px;
+      color: #e8ebeb;
+      background: rgba(18, 22, 23, .72);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 740;
+    }
+
+    .zone-label.top { top: 16px; }
+    .zone-label.bottom { bottom: 16px; }
+
+    .annotation {
+      position: absolute;
+      padding: 7px 9px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 1.2;
+      background: rgba(16, 21, 22, .78);
+      border: 1px solid rgba(255,255,255,.14);
+      color: white;
+      pointer-events: none;
+    }
+
+    .anno-bos { left: 26%; top: 31%; color: var(--teal); }
+    .anno-mss { left: 46%; top: 57%; color: var(--red); }
+    .anno-ob { left: 35%; top: 72%; color: var(--gold-2); }
+    .anno-liq { left: 64%; top: 18%; color: var(--purple); }
+    .anno-entry { left: 68%; top: 65%; color: var(--green); }
+
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .kpi {
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, .035);
+      border-radius: 8px;
+      padding: 12px;
+      min-height: 88px;
+    }
+
+    .kpi span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 7px;
+    }
+
+    .kpi strong {
+      display: block;
+      font-size: 20px;
+      line-height: 1.05;
+    }
+
+    .kpi em {
+      display: block;
+      color: #b9c1c1;
+      font-style: normal;
+      font-size: 12px;
+      margin-top: 8px;
+    }
+
+    .macro-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .macro-card {
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, .035);
+      border-radius: 8px;
+      padding: 13px;
+      min-height: 96px;
+    }
+
+    .macro-card.active {
+      border-color: rgba(215, 189, 98, .74);
+      background: rgba(215, 189, 98, .09);
+    }
+
+    .macro-card span {
+      color: var(--muted);
+      font-size: 12px;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .macro-card strong {
+      display: block;
+      font-size: 19px;
+      line-height: 1.15;
+    }
+
+    .macro-card em {
+      display: block;
+      margin-top: 8px;
+      color: #b9c1c1;
+      font-size: 12px;
+      font-style: normal;
+      line-height: 1.35;
+    }
+
+    .stack {
+      display: grid;
+      gap: 16px;
+    }
+
+    .checklist {
+      padding: 14px 16px 16px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .check {
+      display: grid;
+      grid-template-columns: 20px 1fr auto;
+      align-items: center;
+      gap: 10px;
+      min-height: 38px;
+    }
+
+    .check input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--gold);
+    }
+
+    .check label {
+      color: #e5ebeb;
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .tag {
+      color: #111;
+      background: var(--gold);
+      font-size: 11px;
+      border-radius: 6px;
+      padding: 4px 6px;
+      font-weight: 820;
+    }
+
+    .setup-score {
+      padding: 0 16px 16px;
+    }
+
+    .meter {
+      height: 10px;
+      background: #111718;
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+    }
+
+    .meter span {
+      display: block;
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--red), var(--gold), var(--green));
+      transition: width .2s ease;
+    }
+
+    .score-text {
+      display: flex;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 8px;
+    }
+
+    .trade-plan {
+      padding: 16px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+    }
+
+    .field label {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: #121718;
+      color: var(--text);
+      border-radius: 8px;
+      padding: 10px 11px;
+      outline: none;
+    }
+
+    .field textarea {
+      min-height: 84px;
+      resize: vertical;
+    }
+
+    .two {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .side {
+      border-left: 1px solid var(--line);
+      background: rgba(11, 15, 16, .65);
+      padding: 22px 16px;
+      height: 100vh;
+      overflow: auto;
+      position: sticky;
+      top: 0;
+    }
+
+    .concept {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 13px;
+      background: rgba(255, 255, 255, .035);
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+
+    .concept.active {
+      border-color: rgba(215, 189, 98, .78);
+      background: rgba(215, 189, 98, .10);
+    }
+
+    .concept h4 {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin: 0 0 7px;
+      font-size: 14px;
+    }
+
+    .concept p {
+      margin: 0;
+      color: #c9d0d0;
+      line-height: 1.45;
+      font-size: 12px;
+    }
+
+    .mini {
+      color: #111;
+      background: var(--teal);
+      border-radius: 6px;
+      padding: 3px 6px;
+      font-size: 11px;
+      font-weight: 820;
+      white-space: nowrap;
+    }
+
+    .journal {
+      margin-top: 16px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .entry {
+      display: grid;
+      grid-template-columns: 58px 1fr;
+      gap: 10px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 10px;
+    }
+
+    .time {
+      color: var(--gold);
+      font-size: 12px;
+      font-weight: 780;
+    }
+
+    .entry strong {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+
+    .entry span {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .source-strip {
+      margin-top: 16px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .source {
+      position: relative;
+      min-height: 92px;
+      overflow: hidden;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+    }
+
+    .source img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: .64;
+      display: block;
+    }
+
+    .source span {
+      position: absolute;
+      left: 8px;
+      bottom: 8px;
+      right: 8px;
+      color: white;
+      font-size: 11px;
+      font-weight: 760;
+      text-shadow: 0 2px 8px rgba(0,0,0,.8);
+    }
+
+    .source:after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 30%, rgba(0,0,0,.70));
+      pointer-events: none;
+    }
+
+    .reference-title {
+      color: var(--muted);
+      font-size: 12px;
+      margin: 16px 0 8px;
+    }
+
+    @media (max-width: 1180px) {
+      .app {
+        grid-template-columns: 220px minmax(0, 1fr);
+      }
+
+      .side {
+        grid-column: 1 / -1;
+        height: auto;
+        position: static;
+        border-left: 0;
+        border-top: 1px solid var(--line);
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+
+      .side > * { min-width: 0; }
+    }
+
+    @media (max-width: 860px) {
+      .app {
+        display: block;
+      }
+
+      .rail,
+      .side {
+        position: static;
+        height: auto;
+      }
+
+      .rail {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .grid,
+      .side {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .controls {
+        justify-content: flex-start;
+      }
+
+      .chart-wrap {
+        min-height: 360px;
+      }
+
+      .chart {
+        height: 350px;
+      }
+
+      .kpi-row,
+      .macro-grid,
+      .source-strip {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 520px) {
+      main {
+        padding: 14px;
+      }
+
+      .two,
+      .kpi-row,
+      .macro-grid,
+      .source-strip {
+        grid-template-columns: 1fr;
+      }
+
+      .check {
+        grid-template-columns: 20px 1fr;
+      }
+
+      .check .tag {
+        grid-column: 2;
+        width: fit-content;
+      }
+
+      .annotation {
+        font-size: 10px;
+        padding: 5px 6px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="rail">
+      <div class="brand">
+        <div class="mark"></div>
+        <h1>Smart <span>Money</span><br>行情面板</h1>
+      </div>
+
+      <div class="nav-title">Market Watch</div>
+      <div class="watchlist" id="watchlist">
+        <div class="market-group">
+          <div class="market-group-title"><span>Macro</span><span>大行情</span></div>
+          <button class="symbol active" data-symbol="全球風險盤" data-market="大行情" data-trend="風險偏多" data-score="74" data-scenario="美股維持 BOS，台股跟隨但需觀察匯率與權值股流動性，加密偏向高 beta 延伸。">
+            <strong>全球風險盤</strong><span class="badge up">Risk On</span><small>美股 / 台股 / 加密同向掃描</small>
+          </button>
+        </div>
+
+        <div class="market-group">
+          <div class="market-group-title"><span>US Equity</span><span>美股</span></div>
+          <button class="symbol" data-symbol="SPY" data-market="美股" data-trend="看多延續" data-score="78" data-scenario="SPY 日線結構仍偏多，等待回踩 Discount 或前高流動性被掃後確認。">
+            <strong>SPY</strong><span class="badge up">+0.8%</span><small>S&P 500 結構延續</small>
+          </button>
+          <button class="symbol" data-symbol="QQQ" data-market="美股" data-trend="高位掃單" data-score="69" data-scenario="QQQ 接近 Premium 區，留意先掃高點後的 MSS，避免在溢價區追多。">
+            <strong>QQQ</strong><span class="badge flat">+0.2%</span><small>科技股高位流動性</small>
+          </button>
+          <button class="symbol" data-symbol="NVDA" data-market="美股" data-trend="強勢但過熱" data-score="62" data-scenario="NVDA 仍是強勢結構，但價格離 OB 遠，較適合等回踩或掃單後再找計畫。">
+            <strong>NVDA</strong><span class="badge up">+1.6%</span><small>強勢股等待回踩</small>
+          </button>
+        </div>
+
+        <div class="market-group">
+          <div class="market-group-title"><span>Taiwan Equity</span><span>台股</span></div>
+          <button class="symbol" data-symbol="加權指數" data-market="台股" data-trend="跟隨美股" data-score="71" data-scenario="台股加權跟隨美股風險偏好，若開高進 Premium 區，先等盤中流動性掃完。">
+            <strong>加權指數</strong><span class="badge up">+0.7%</span><small>權值股推動結構</small>
+          </button>
+          <button class="symbol" data-symbol="台積電" data-market="台股" data-trend="主結構偏多" data-score="76" data-scenario="台積電仍是台股主結構核心，回到折價區且守住 OB 時優先追蹤多方延續。">
+            <strong>台積電</strong><span class="badge up">+1.2%</span><small>OB 回測觀察</small>
+          </button>
+          <button class="symbol" data-symbol="電子期" data-market="台股" data-trend="盤整待破" data-score="58" data-scenario="電子期在區間內整理，等待上緣或下緣流動性先被掃，再判斷 BOS/MSS。">
+            <strong>電子期</strong><span class="badge flat">0.1%</span><small>區間兩端流動性</small>
+          </button>
+        </div>
+
+        <div class="market-group">
+          <div class="market-group-title"><span>Crypto</span><span>加密</span></div>
+          <button class="symbol" data-symbol="ETHUSDT" data-market="加密" data-trend="看多延續" data-score="78" data-scenario="ETHUSDT BOS 後回踩 Discount，若小級別重新轉強，可接續看多劇本。">
+            <strong>ETHUSDT</strong><span class="badge up">+2.4%</span><small>BOS 後回踩 Discount</small>
+          </button>
+          <button class="symbol" data-symbol="BTCUSDT" data-market="加密" data-trend="盤整待破" data-score="54" data-scenario="BTCUSDT 流動性仍在區間兩側，先觀察掃高或掃低後是否出現明確結構。">
+            <strong>BTCUSDT</strong><span class="badge flat">0.3%</span><small>流動性仍在區間兩側</small>
+          </button>
+          <button class="symbol" data-symbol="SOLUSDT" data-market="加密" data-trend="疑似反轉" data-score="65" data-scenario="SOLUSDT 已有 MSS 線索，等待回到 OB 或 FVG 再確認空方/多方是否接手。">
+            <strong>SOLUSDT</strong><span class="badge down">-1.1%</span><small>MSS 後等待 OB 測試</small>
+          </button>
+        </div>
+      </div>
+
+      <div class="nav-title">SMC Flow</div>
+      <div class="flow">
+        <div class="flow-step"><span class="num">1</span><span>先標出高低點與 BOS，判斷結構是延續或破壞。</span></div>
+        <div class="flow-step"><span class="num">2</span><span>找區間兩端流動性，確認價格是否先掃單再走方向。</span></div>
+        <div class="flow-step"><span class="num">3</span><span>用 Premium / Discount 決定只在合理價位找多或空。</span></div>
+        <div class="flow-step"><span class="num">4</span><span>回到 Order Block / FVG 附近規劃進場、止損、目標。</span></div>
+      </div>
+    </aside>
+
+    <main>
+      <div class="topbar">
+        <div class="title-group">
+          <h2><span id="symbolTitle">全球風險盤</span> SMC 追蹤</h2>
+          <p>把 PDF 裡的 Smart Money Concept 拆成大行情、盤前檢查、圖表標註與交易計畫。</p>
+        </div>
+        <div class="controls" id="timeframe">
+          <button class="chip">15m</button>
+          <button class="chip active">1H</button>
+          <button class="chip">4H</button>
+          <button class="chip">1D</button>
+        </div>
+      </div>
+
+      <section class="macro-grid" aria-label="大行情跨市場雷達">
+        <div class="macro-card active" data-market-card="大行情">
+          <span>大行情</span>
+          <strong>Risk On</strong>
+          <em>美股 BOS 仍有效，台股與加密偏跟隨。</em>
+        </div>
+        <div class="macro-card" data-market-card="美股">
+          <span>美股</span>
+          <strong>SPY / QQQ</strong>
+          <em>科技權值接近高位流動性，留意掃高後反應。</em>
+        </div>
+        <div class="macro-card" data-market-card="台股">
+          <span>台股</span>
+          <strong>加權 / 台積電</strong>
+          <em>權值股決定結構延續，開高時避免直接追價。</em>
+        </div>
+        <div class="macro-card" data-market-card="加密">
+          <span>加密</span>
+          <strong>BTC / ETH / SOL</strong>
+          <em>高 beta 市場，優先等掃單與 OB 回測。</em>
+        </div>
+      </section>
+
+      <section class="grid">
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <h3><span id="marketTitle">大行情</span>價格行為與結構標註</h3>
+              <small id="scenarioText">目前劇本：美股維持 BOS，台股跟隨但需觀察匯率與權值股流動性，加密偏向高 beta 延伸。</small>
+            </div>
+            <small>SMC / BOS / MSS / OB</small>
+          </div>
+          <div class="chart-wrap">
+            <div class="chart">
+              <div class="zone premium"></div>
+              <div class="zone discount"></div>
+              <div class="zone-label top">Premium Zone：偏空觀察</div>
+              <div class="zone-label bottom">Discount Zone：偏多觀察</div>
+              <svg viewBox="0 0 1000 500" preserveAspectRatio="none" aria-label="SMC market structure chart">
+                <polyline points="30,390 95,320 145,350 210,245 280,280 360,190 425,225 485,330 560,255 620,280 675,175 735,245 805,210 875,118 960,160" fill="none" stroke="rgba(255,255,255,.92)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                <line x1="178" y1="246" x2="355" y2="246" stroke="#67d7d5" stroke-width="3" stroke-dasharray="6 7"/>
+                <line x1="365" y1="330" x2="560" y2="330" stroke="#f05a5a" stroke-width="3" stroke-dasharray="7 8"/>
+                <rect x="310" y="350" width="190" height="78" fill="rgba(215,189,98,.16)" stroke="#d7bd62" stroke-width="2"/>
+                <rect x="650" y="76" width="170" height="62" fill="rgba(179,160,190,.20)" stroke="#b3a0be" stroke-width="2"/>
+                <rect x="680" y="306" width="126" height="54" fill="rgba(103,215,213,.16)" stroke="#67d7d5" stroke-width="2"/>
+                <line x1="875" y1="118" x2="875" y2="55" stroke="#efe27b" stroke-width="2"/>
+                <line x1="820" y1="118" x2="928" y2="118" stroke="#efe27b" stroke-width="2"/>
+                <g opacity=".92">
+                  <line x1="742" y1="205" x2="742" y2="295" stroke="#f05a5a" stroke-width="2"/>
+                  <line x1="704" y1="292" x2="788" y2="292" stroke="#f05a5a" stroke-width="2"/>
+                </g>
+              </svg>
+              <span class="annotation anno-bos">BOS<br>結構延續</span>
+              <span class="annotation anno-mss">MSS<br>結構反轉</span>
+              <span class="annotation anno-ob">OB<br>止損點位</span>
+              <span class="annotation anno-liq">Liquidity Grab<br>掃高點</span>
+              <span class="annotation anno-entry">Entry<br>回踩測試</span>
+            </div>
+            <div class="kpi-row">
+              <div class="kpi"><span>結構狀態</span><strong id="trendValue">風險偏多</strong><em id="trendNote">美股主導，台股與加密跟隨</em></div>
+              <div class="kpi"><span>跨市場確認</span><strong id="marketConfirm">美股 + 台股</strong><em id="marketNote">先看美股期貨與台積電權重</em></div>
+              <div class="kpi"><span>進場區域</span><strong>0-0.5</strong><em>Discount Zone 優先找多</em></div>
+              <div class="kpi"><span>Setup Score</span><strong id="kpiScore">78</strong><em>4/6 條件成立</em></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stack">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h3>盤前 SMC 檢查</h3>
+                <small>勾選後自動更新 setup 分數</small>
+              </div>
+            </div>
+            <div class="checklist" id="checklist">
+              <div class="check"><input type="checkbox" checked><label>高週期方向已確認，不逆主結構交易</label><span class="tag">HTF</span></div>
+              <div class="check"><input type="checkbox" checked><label>已有 BOS 或 MSS，避免只看單根 K 線</label><span class="tag">Structure</span></div>
+              <div class="check"><input type="checkbox" checked><label>價格先掃流動性，出現 Liquidity Grab</label><span class="tag">Liquidity</span></div>
+              <div class="check"><input type="checkbox"><label>進場位落在 Premium / Discount 的合理半區</label><span class="tag">PD</span></div>
+              <div class="check"><input type="checkbox" checked><label>Order Block 可定義止損，不用情緒停損</label><span class="tag">OB</span></div>
+              <div class="check"><input type="checkbox"><label>目標價到下一個流動性池，R 倍數足夠</label><span class="tag">Target</span></div>
+            </div>
+            <div class="setup-score">
+              <div class="meter"><span id="scoreBar"></span></div>
+              <div class="score-text"><span id="scoreText">Setup 67%</span><span id="scoreHint">可以觀察，尚未重倉</span></div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h3>交易計畫</h3>
+                <small>把講義概念變成執行欄位</small>
+              </div>
+            </div>
+            <div class="trade-plan">
+              <div class="two">
+                <div class="field">
+                  <label>方向</label>
+                  <select>
+                    <option>只找多</option>
+                    <option>只找空</option>
+                    <option>等待突破</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>價格區</label>
+                  <select>
+                    <option>Discount 0-0.5</option>
+                    <option>Premium 0.5-1</option>
+                    <option>中線觀望</option>
+                  </select>
+                </div>
+              </div>
+              <div class="two">
+                <div class="field"><label>進場</label><input value="回踩 OB 後小級別 BOS"></div>
+                <div class="field"><label>止損</label><input value="OB 下緣 / 掃低點下方"></div>
+              </div>
+              <div class="two">
+                <div class="field"><label>目標 1</label><input value="上一個等高點流動性"></div>
+                <div class="field"><label>目標 2</label><input value="Premium 區高點"></div>
+              </div>
+              <div class="field">
+                <label>失效條件</label>
+                <textarea>如果價格跌破 OB 且沒有快速收回，原本的看多延續劇本取消，改等 MSS 後重新定位。</textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="reference-title">PDF 內容來源抽樣</div>
+      <div class="source-strip">
+        <div class="source"><img src="extracted-pages/page-010-obj-12.jpg" alt=""><span>BOS：結構延續</span></div>
+        <div class="source"><img src="extracted-pages/page-020-obj-22.jpg" alt=""><span>莊家成本區與掃單</span></div>
+        <div class="source"><img src="extracted-pages/page-040-obj-42.jpg" alt=""><span>價格交付與流動性</span></div>
+        <div class="source"><img src="extracted-pages/page-120-obj-122.jpg" alt=""><span>Premium / Discount</span></div>
+      </div>
+    </main>
+
+    <aside class="side">
+      <div>
+        <div class="nav-title">Concept Focus</div>
+        <div class="concept active" data-concept="structure">
+          <h4>BOS / MSS <span class="mini">結構</span></h4>
+          <p>BOS 用來確認趨勢延續；MSS 代表原本結構被破壞，劇本要重新判斷。</p>
+        </div>
+        <div class="concept" data-concept="liquidity">
+          <h4>Liquidity Grab <span class="mini">掃單</span></h4>
+          <p>價格常先刺穿高低點，吸收散戶止損與追單，再往真正方向移動。</p>
+        </div>
+        <div class="concept" data-concept="pd">
+          <h4>Premium / Discount <span class="mini">斐波</span></h4>
+          <p>折價區偏向尋找多單，溢價區偏向尋找空單，避免在錯誤價格追價。</p>
+        </div>
+        <div class="concept" data-concept="ob">
+          <h4>Order Block <span class="mini">風控</span></h4>
+          <p>OB 是莊家推動價格前的成本區，也可用來定義止損與回測進場。</p>
+        </div>
+      </div>
+
+      <div>
+        <div class="nav-title">Session Journal</div>
+        <div class="journal">
+          <div class="entry"><div class="time">09:15</div><div><strong>高週期偏多</strong><span>4H 仍維持 HH/HL，1H 回踩未破結構。</span></div></div>
+          <div class="entry"><div class="time">10:05</div><div><strong>掃低點後回收</strong><span>Discount 區插針，等待小級別 BOS。</span></div></div>
+          <div class="entry"><div class="time">11:20</div><div><strong>OB 測試完成</strong><span>若下一根收回區間，可啟動計畫 A。</span></div></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    const symbols = document.querySelectorAll(".symbol");
+    const macroCards = document.querySelectorAll(".macro-card");
+    const symbolTitle = document.querySelector("#symbolTitle");
+    const marketTitle = document.querySelector("#marketTitle");
+    const trendValue = document.querySelector("#trendValue");
+    const kpiScore = document.querySelector("#kpiScore");
+    const scenarioText = document.querySelector("#scenarioText");
+    const trendNote = document.querySelector("#trendNote");
+    const marketConfirm = document.querySelector("#marketConfirm");
+    const marketNote = document.querySelector("#marketNote");
+
+    const marketCopy = {
+      "大行情": {
+        confirm: "美股 + 台股",
+        note: "先看美股期貨與台積電權重",
+        trendNote: "美股主導，台股與加密跟隨"
+      },
+      "美股": {
+        confirm: "SPY / QQQ / VIX",
+        note: "科技權值與波動率決定風險偏好",
+        trendNote: "先用指數結構篩選個股"
+      },
+      "台股": {
+        confirm: "加權 / 台積電 / 匯率",
+        note: "權值股、台指期與匯率一起看",
+        trendNote: "跟隨美股但要確認本地權值"
+      },
+      "加密": {
+        confirm: "BTC / ETH / 美股",
+        note: "高 beta 市場需等流動性掃完",
+        trendNote: "跟隨風險偏好，波動放大"
+      }
+    };
+
+    symbols.forEach((button) => {
+      button.addEventListener("click", () => {
+        symbols.forEach((item) => item.classList.remove("active"));
+        button.classList.add("active");
+        macroCards.forEach((card) => {
+          card.classList.toggle("active", card.dataset.marketCard === button.dataset.market);
+        });
+        const copy = marketCopy[button.dataset.market] || marketCopy["大行情"];
+        symbolTitle.textContent = button.dataset.symbol;
+        marketTitle.textContent = `${button.dataset.market} `;
+        trendValue.textContent = button.dataset.trend;
+        kpiScore.textContent = button.dataset.score;
+        trendNote.textContent = copy.trendNote;
+        marketConfirm.textContent = copy.confirm;
+        marketNote.textContent = copy.note;
+        scenarioText.textContent = `目前劇本：${button.dataset.scenario}`;
+      });
+    });
+
+    document.querySelectorAll(".chip").forEach((chip) => {
+      chip.addEventListener("click", () => {
+        document.querySelectorAll(".chip").forEach((item) => item.classList.remove("active"));
+        chip.classList.add("active");
+      });
+    });
+
+    document.querySelectorAll(".concept").forEach((concept) => {
+      concept.addEventListener("click", () => {
+        document.querySelectorAll(".concept").forEach((item) => item.classList.remove("active"));
+        concept.classList.add("active");
+      });
+    });
+
+    const boxes = document.querySelectorAll("#checklist input");
+    const bar = document.querySelector("#scoreBar");
+    const scoreText = document.querySelector("#scoreText");
+    const scoreHint = document.querySelector("#scoreHint");
+
+    function updateScore() {
+      const total = boxes.length;
+      const checked = Array.from(boxes).filter((box) => box.checked).length;
+      const pct = Math.round((checked / total) * 100);
+      bar.style.width = `${pct}%`;
+      scoreText.textContent = `Setup ${pct}%`;
+      scoreHint.textContent = pct >= 84 ? "條件成熟，等待觸發" : pct >= 60 ? "可以觀察，尚未重倉" : "資訊不足，先觀望";
+    }
+
+    boxes.forEach((box) => box.addEventListener("change", updateScore));
+    updateScore();
+  </script>
+</body>
+</html>

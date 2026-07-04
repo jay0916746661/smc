@@ -1,0 +1,7 @@
+smc-taipei.pdf
+extracted-pages/*
+!extracted-pages/page-010-obj-12.jpg
+!extracted-pages/page-020-obj-22.jpg
+!extracted-pages/page-040-obj-42.jpg
+!extracted-pages/page-120-obj-122.jpg
+.DS_Store
