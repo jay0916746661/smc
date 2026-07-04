@@ -551,6 +551,147 @@
       line-height: 1.35;
     }
 
+    .portfolio-section {
+      margin-top: 16px;
+      display: grid;
+      grid-template-columns: minmax(0, .9fr) minmax(0, 1.5fr);
+      gap: 16px;
+      align-items: start;
+    }
+
+    .portfolio-summary {
+      padding: 16px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .portfolio-total {
+      display: grid;
+      gap: 6px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .portfolio-total span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .portfolio-total strong {
+      font-size: 34px;
+      line-height: 1;
+    }
+
+    .allocation {
+      display: grid;
+      gap: 10px;
+    }
+
+    .allocation-row {
+      display: grid;
+      grid-template-columns: 74px 1fr 44px;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      color: #dfe6e6;
+    }
+
+    .allocation-bar {
+      height: 9px;
+      border-radius: 999px;
+      background: #111718;
+      border: 1px solid var(--line);
+      overflow: hidden;
+    }
+
+    .allocation-bar span {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: var(--gold);
+    }
+
+    .allocation-bar.equity span { background: var(--gold); }
+    .allocation-bar.etf span { background: var(--teal); }
+    .allocation-bar.crypto span { background: var(--green); }
+    .allocation-bar.cash span { background: #b9c1c1; }
+
+    .risk-note {
+      border: 1px solid rgba(215, 189, 98, .35);
+      background: rgba(215, 189, 98, .08);
+      border-radius: 8px;
+      padding: 12px;
+      color: #e8dfb7;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .portfolio-table-wrap {
+      overflow: auto;
+    }
+
+    .portfolio-table {
+      width: 100%;
+      min-width: 760px;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    .portfolio-table th,
+    .portfolio-table td {
+      padding: 11px 12px;
+      border-bottom: 1px solid var(--line);
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .portfolio-table th {
+      color: var(--muted);
+      font-weight: 720;
+      background: rgba(255, 255, 255, .025);
+    }
+
+    .portfolio-table th:first-child,
+    .portfolio-table td:first-child {
+      text-align: left;
+      position: sticky;
+      left: 0;
+      background: #171d1f;
+    }
+
+    .asset-name {
+      display: grid;
+      gap: 3px;
+    }
+
+    .asset-name strong {
+      font-size: 13px;
+    }
+
+    .asset-name span {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .weight-cell {
+      min-width: 110px;
+    }
+
+    .weight-track {
+      height: 7px;
+      background: #111718;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 5px;
+    }
+
+    .weight-track span {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--gold), var(--gold-2));
+    }
+
     .stack {
       display: grid;
       gap: 16px;
@@ -806,6 +947,10 @@
       }
 
       .side > * { min-width: 0; }
+
+      .portfolio-section {
+        grid-template-columns: 1fr;
+      }
     }
 
     @media (max-width: 860px) {
@@ -825,6 +970,7 @@
       }
 
       .grid,
+      .portfolio-section,
       .side {
         grid-template-columns: 1fr;
       }
@@ -1095,6 +1241,98 @@
                 <textarea>如果價格跌破 OB 且沒有快速收回，原本的看多延續劇本取消，改等 MSS 後重新定位。</textarea>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="portfolio-section" aria-label="派網目前部位">
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <h3>派網目前部位</h3>
+              <small>依你提供的持有價值與權重整理</small>
+            </div>
+            <small>Portfolio</small>
+          </div>
+          <div class="portfolio-summary">
+            <div class="portfolio-total">
+              <span>總資產估值</span>
+              <strong>$399.51</strong>
+              <span>USDT 計價，含現金與尾倉</span>
+            </div>
+            <div class="allocation">
+              <div class="allocation-row">
+                <span>股票型</span>
+                <div class="allocation-bar equity"><span style="width:86.7%"></span></div>
+                <strong>86.7%</strong>
+              </div>
+              <div class="allocation-row">
+                <span>ETF</span>
+                <div class="allocation-bar etf"><span style="width:5.4%"></span></div>
+                <strong>5.4%</strong>
+              </div>
+              <div class="allocation-row">
+                <span>加密</span>
+                <div class="allocation-bar crypto"><span style="width:5.4%"></span></div>
+                <strong>5.4%</strong>
+              </div>
+              <div class="allocation-row">
+                <span>現金/尾倉</span>
+                <div class="allocation-bar cash"><span style="width:2.6%"></span></div>
+                <strong>2.6%</strong>
+              </div>
+            </div>
+            <div class="kpi-row">
+              <div class="kpi"><span>最大部位</span><strong>MSFTX</strong><em>17.0% / $67.94</em></div>
+              <div class="kpi"><span>前五大集中度</span><strong>62.5%</strong><em>MSFTX、SOFIX、SPCX、RKLBX、HIMSX</em></div>
+              <div class="kpi"><span>24h 正貢獻</span><strong>ADA</strong><em>+4.9%，權重 2.9%</em></div>
+              <div class="kpi"><span>現金比例</span><strong>2.2%</strong><em>USDT $8.60</em></div>
+            </div>
+            <div class="risk-note">
+              目前組合高度偏股票型與成長題材，前五大超過六成；如果大行情出現美股 MSS 或台股權值股轉弱，面板上應優先檢查 MSFTX、SOFIX、SPCX、RKLBX 的減碼與止損劇本。
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <h3>部位明細</h3>
+              <small>權重條越長，對帳戶波動影響越大</small>
+            </div>
+            <small>$399.51</small>
+          </div>
+          <div class="portfolio-table-wrap">
+            <table class="portfolio-table">
+              <thead>
+                <tr>
+                  <th>資產</th>
+                  <th>持有數量</th>
+                  <th>單價</th>
+                  <th>價值</th>
+                  <th>權重</th>
+                  <th>24h</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td><span class="asset-name"><strong>MSFTX</strong><span>微軟</span></span></td><td>0.173664</td><td>$391.21</td><td>$67.94</td><td class="weight-cell">17.0%<div class="weight-track"><span style="width:100%"></span></div></td><td class="flat">0.0%</td></tr>
+                <tr><td><span class="asset-name"><strong>SOFIX</strong><span>SoFi</span></span></td><td>2.883878</td><td>$18.25</td><td>$52.63</td><td class="weight-cell">13.2%<div class="weight-track"><span style="width:77.6%"></span></div></td><td class="flat">0.0%</td></tr>
+                <tr><td><span class="asset-name"><strong>SPCX</strong><span>太空/SPAC</span></span></td><td>0.307056</td><td>$159.93</td><td>$49.11</td><td class="weight-cell">12.3%<div class="weight-track"><span style="width:72.4%"></span></div></td><td class="down">-0.5%</td></tr>
+                <tr><td><span class="asset-name"><strong>RKLBX</strong><span>Rocket Lab</span></span></td><td>0.460235</td><td>$100.33</td><td>$46.18</td><td class="weight-cell">11.6%<div class="weight-track"><span style="width:68.2%"></span></div></td><td class="flat">0.0%</td></tr>
+                <tr><td><span class="asset-name"><strong>HIMSX</strong><span>Hims & Hers</span></span></td><td>0.900810</td><td>$37.06</td><td>$33.38</td><td class="weight-cell">8.4%<div class="weight-track"><span style="width:49.4%"></span></div></td><td class="flat">0.0%</td></tr>
+                <tr><td><span class="asset-name"><strong>ONDSX</strong><span>Ondas</span></span></td><td>3.749440</td><td>$7.47</td><td>$28.01</td><td class="weight-cell">7.0%<div class="weight-track"><span style="width:41.2%"></span></div></td><td class="flat">0.0%</td></tr>
+                <tr><td><span class="asset-name"><strong>QQQX</strong><span>納指100 ETF</span></span></td><td>0.030099</td><td>$715.00</td><td>$21.52</td><td class="weight-cell">5.4%<div class="weight-track"><span style="width:31.8%"></span></div></td><td class="flat">0.0%</td></tr>
+                <tr><td><span class="asset-name"><strong>PLTRX</strong><span>Palantir</span></span></td><td>0.148566</td><td>$129.95</td><td>$19.31</td><td class="weight-cell">4.8%<div class="weight-track"><span style="width:28.2%"></span></div></td><td class="flat">0.0%</td></tr>
+                <tr><td><span class="asset-name"><strong>NVOX</strong><span>諾和諾德</span></span></td><td>0.353412</td><td>$50.34</td><td>$17.79</td><td class="weight-cell">4.5%<div class="weight-track"><span style="width:26.5%"></span></div></td><td class="flat">0.0%</td></tr>
+                <tr><td><span class="asset-name"><strong>NFLXX</strong><span>奈飛</span></span></td><td>0.174825</td><td>$77.72</td><td>$13.59</td><td class="weight-cell">3.4%<div class="weight-track"><span style="width:20.0%"></span></div></td><td class="flat">0.0%</td></tr>
+                <tr><td><span class="asset-name"><strong>ADA</strong><span>艾達幣</span></span></td><td>66.140013</td><td>$0.1775</td><td>$11.74</td><td class="weight-cell">2.9%<div class="weight-track"><span style="width:17.1%"></span></div></td><td class="up">+4.9%</td></tr>
+                <tr><td><span class="asset-name"><strong>CRCLX</strong><span>Circle</span></span></td><td>0.167227</td><td>$64.97</td><td>$10.86</td><td class="weight-cell">2.7%<div class="weight-track"><span style="width:15.9%"></span></div></td><td class="flat">0.0%</td></tr>
+                <tr><td><span class="asset-name"><strong>ETH</strong><span>以太坊</span></span></td><td>0.005640</td><td>$1,763.11</td><td>$9.94</td><td class="weight-cell">2.5%<div class="weight-track"><span style="width:14.7%"></span></div></td><td class="up">+1.5%</td></tr>
+                <tr><td><span class="asset-name"><strong>USDT</strong><span>現金</span></span></td><td>8.600750</td><td>$1.00</td><td>$8.60</td><td class="weight-cell">2.2%<div class="weight-track"><span style="width:12.9%"></span></div></td><td>--</td></tr>
+                <tr><td><span class="asset-name"><strong>METAX</strong><span>Meta</span></span></td><td>0.012369</td><td>$585.36</td><td>$7.24</td><td class="weight-cell">1.8%<div class="weight-track"><span style="width:10.6%"></span></div></td><td class="flat">0.0%</td></tr>
+                <tr><td><span class="asset-name"><strong>其他尾倉</strong><span>零碎部位</span></span></td><td>--</td><td>--</td><td>$1.67</td><td class="weight-cell">0.4%<div class="weight-track"><span style="width:2.4%"></span></div></td><td>--</td></tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </section>
