@@ -522,6 +522,7 @@
       border-radius: 8px;
       padding: 13px;
       min-height: 96px;
+      cursor: pointer;
     }
 
     .macro-card.active {
@@ -659,6 +660,15 @@
       background: #171d1f;
     }
 
+    .portfolio-table tbody tr {
+      cursor: pointer;
+    }
+
+    .portfolio-table tbody tr:hover td,
+    .portfolio-table tbody tr:hover td:first-child {
+      background: rgba(215, 189, 98, .08);
+    }
+
     .asset-name {
       display: grid;
       gap: 3px;
@@ -709,6 +719,12 @@
       border-radius: 8px;
       overflow: hidden;
       min-width: 0;
+      cursor: pointer;
+    }
+
+    .strategy-card.active {
+      border-color: rgba(215, 189, 98, .72);
+      background: rgba(215, 189, 98, .08);
     }
 
     .strategy-card h4 {
@@ -768,6 +784,70 @@
       color: #101516;
       font-size: 11px;
       font-weight: 820;
+    }
+
+    .analysis-section {
+      margin-top: 16px;
+    }
+
+    .analysis-grid {
+      padding: 16px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .analysis-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .035);
+      padding: 13px;
+      min-width: 0;
+      cursor: pointer;
+    }
+
+    .analysis-card:hover,
+    .analysis-card.active {
+      border-color: rgba(215, 189, 98, .72);
+      background: rgba(215, 189, 98, .08);
+    }
+
+    .analysis-card h4 {
+      margin: 0 0 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 14px;
+    }
+
+    .analysis-card h4 span {
+      color: var(--gold);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .analysis-card p {
+      margin: 0;
+      color: #c7d0d0;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .analysis-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .analysis-tags span {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 4px 6px;
+      color: #dce3e3;
+      font-size: 11px;
+      background: rgba(255,255,255,.035);
     }
 
     .stack {
@@ -1033,6 +1113,10 @@
       .strategy-grid {
         grid-template-columns: 1fr;
       }
+
+      .analysis-grid {
+        grid-template-columns: 1fr;
+      }
     }
 
     @media (max-width: 860px) {
@@ -1054,6 +1138,7 @@
       .grid,
       .portfolio-section,
       .strategy-grid,
+      .analysis-grid,
       .side {
         grid-template-columns: 1fr;
       }
@@ -1140,6 +1225,21 @@
           <button class="symbol" data-symbol="NVDA" data-market="美股" data-tv-symbol="NASDAQ:NVDA" data-trend="強勢但過熱" data-score="62" data-scenario="NVDA 仍是強勢結構，但價格離 OB 遠，較適合等回踩或掃單後再找計畫。">
             <strong>NVDA</strong><span class="badge up">+1.6%</span><small>強勢股等待回踩</small>
           </button>
+          <button class="symbol" data-symbol="MSFT" data-market="美股" data-tv-symbol="NASDAQ:MSFT" data-trend="核心持倉" data-score="80" data-scenario="MSFT 是目前最大部位，優先看 QQQ 與自身日線是否維持 BOS；若跌破 OB，組合風險要先降。">
+            <strong>MSFT</strong><span class="badge up">17.0%</span><small>最大部位，核心風險錨</small>
+          </button>
+          <button class="symbol" data-symbol="SOFI" data-market="美股" data-tv-symbol="NASDAQ:SOFI" data-trend="高 beta 成長" data-score="66" data-scenario="SOFI 權重第二，波動會放大大盤訊號；只在 Discount 或掃低回收後找延續，避免追高。">
+            <strong>SOFI</strong><span class="badge up">13.2%</span><small>金融科技，高 beta</small>
+          </button>
+          <button class="symbol" data-symbol="RKLB" data-market="美股" data-tv-symbol="NASDAQ:RKLB" data-trend="題材強勢股" data-score="64" data-scenario="RKLB 屬題材型高波動，若掃高後無法延續，要防 MSS；回測 OB 才是比較乾淨的位置。">
+            <strong>RKLB</strong><span class="badge up">11.6%</span><small>航太題材，留意掃高</small>
+          </button>
+          <button class="symbol" data-symbol="HIMS" data-market="美股" data-tv-symbol="NYSE:HIMS" data-trend="成長股觀察" data-score="61" data-scenario="HIMS 權重中段，適合用區間上下緣看流動性；若回到 Discount 守住結構才提高信心。">
+            <strong>HIMS</strong><span class="badge flat">8.4%</span><small>成長股，等區間訊號</small>
+          </button>
+          <button class="symbol" data-symbol="PLTR" data-market="美股" data-tv-symbol="NASDAQ:PLTR" data-trend="AI 題材延伸" data-score="63" data-scenario="PLTR 是 AI 題材衛星部位，跟 QQQ/NVDA 聯動高；若科技股掃高轉弱，先看 PLTR 是否同步 MSS。">
+            <strong>PLTR</strong><span class="badge flat">4.8%</span><small>AI 題材衛星</small>
+          </button>
         </div>
 
         <div class="market-group">
@@ -1152,6 +1252,18 @@
           </button>
           <button class="symbol" data-symbol="電子期" data-market="台股" data-tv-symbol="TAIFEX:EXF1!" data-trend="盤整待破" data-score="58" data-scenario="電子期在區間內整理，等待上緣或下緣流動性先被掃，再判斷 BOS/MSS。">
             <strong>電子期</strong><span class="badge flat">0.1%</span><small>區間兩端流動性</small>
+          </button>
+          <button class="symbol" data-symbol="鴻海" data-market="台股" data-tv-symbol="TWSE:2317" data-trend="AI 伺服器鏈" data-score="64" data-scenario="鴻海適合作為台股 AI 硬體鏈觀察；若台積電與加權同步 BOS，回測 OB 可列入追蹤。">
+            <strong>鴻海</strong><span class="badge flat">2317</span><small>AI 伺服器鏈</small>
+          </button>
+          <button class="symbol" data-symbol="聯發科" data-market="台股" data-tv-symbol="TWSE:2454" data-trend="半導體權值" data-score="62" data-scenario="聯發科跟半導體情緒連動，若開高進 Premium 區，先等掃高後反應，不急追。">
+            <strong>聯發科</strong><span class="badge flat">2454</span><small>半導體權值</small>
+          </button>
+          <button class="symbol" data-symbol="台達電" data-market="台股" data-tv-symbol="TWSE:2308" data-trend="電源與 AI 基建" data-score="65" data-scenario="台達電偏 AI 基建與電源題材，適合等回測需求區；若跌破日線 OB，先降追蹤優先級。">
+            <strong>台達電</strong><span class="badge flat">2308</span><small>AI 基建 / 電源</small>
+          </button>
+          <button class="symbol" data-symbol="緯創" data-market="台股" data-tv-symbol="TWSE:3231" data-trend="高 beta 台股 AI" data-score="60" data-scenario="緯創波動偏大，適合用 Liquidity Grab 後是否收回區間來判斷，不適合在中線位置追價。">
+            <strong>緯創</strong><span class="badge flat">3231</span><small>高 beta AI 伺服器</small>
           </button>
         </div>
 
@@ -1185,30 +1297,30 @@
           <p>把 PDF 裡的 Smart Money Concept 拆成大行情、盤前檢查、圖表標註與交易計畫。</p>
         </div>
         <div class="controls" id="timeframe">
-          <button class="chip">15m</button>
-          <button class="chip active">1H</button>
-          <button class="chip">4H</button>
-          <button class="chip">1D</button>
+          <button class="chip" data-interval="15">15m</button>
+          <button class="chip active" data-interval="60">1H</button>
+          <button class="chip" data-interval="240">4H</button>
+          <button class="chip" data-interval="D">1D</button>
         </div>
       </div>
 
       <section class="macro-grid" aria-label="大行情跨市場雷達">
-        <div class="macro-card active" data-market-card="大行情">
+        <div class="macro-card active" data-market-card="大行情" data-symbol="全球風險盤" data-market="大行情" data-tv-symbol="AMEX:SPY" data-trend="風險偏多" data-score="74" data-scenario="美股維持 BOS，台股跟隨但需觀察匯率與權值股流動性，加密偏向高 beta 延伸。">
           <span>大行情</span>
           <strong>Risk On</strong>
           <em>美股 BOS 仍有效，台股與加密偏跟隨。</em>
         </div>
-        <div class="macro-card" data-market-card="美股">
+        <div class="macro-card" data-market-card="美股" data-symbol="QQQ" data-market="美股" data-tv-symbol="NASDAQ:QQQ" data-trend="高位掃單" data-score="69" data-scenario="美股科技股接近高位流動性，先看 QQQ 是否掃高後延續，或轉成 MSS。">
           <span>美股</span>
           <strong>SPY / QQQ</strong>
           <em>科技權值接近高位流動性，留意掃高後反應。</em>
         </div>
-        <div class="macro-card" data-market-card="台股">
+        <div class="macro-card" data-market-card="台股" data-symbol="台積電" data-market="台股" data-tv-symbol="TWSE:2330" data-trend="台股主結構" data-score="76" data-scenario="台股先看台積電與加權是否同步 BOS；若開高進 Premium 區，等待掃單後再決定。">
           <span>台股</span>
           <strong>加權 / 台積電</strong>
           <em>權值股決定結構延續，開高時避免直接追價。</em>
         </div>
-        <div class="macro-card" data-market-card="加密">
+        <div class="macro-card" data-market-card="加密" data-symbol="BTCUSDT" data-market="加密" data-tv-symbol="BINANCE:BTCUSDT" data-trend="加密風向" data-score="54" data-scenario="加密先看 BTC 是否突破區間；BTC/ETH 同步 BOS 後，再看 ADA、SOL 這類衛星。">
           <span>加密</span>
           <strong>BTC / ETH / SOL</strong>
           <em>高 beta 市場，優先等掃單與 OB 回測。</em>
@@ -1328,6 +1440,58 @@
         </div>
       </section>
 
+      <section class="panel analysis-section" aria-label="美股台股標的分析">
+        <div class="panel-head">
+          <div>
+            <h3>我的美股 / 台股標的分析</h3>
+            <small>點卡片會切到對應即時圖；分析以 SMC 結構、權重與題材風險整理</small>
+          </div>
+          <small>Targets</small>
+        </div>
+        <div class="analysis-grid" id="analysisGrid">
+          <article class="analysis-card active" data-symbol="MSFT" data-market="美股" data-tv-symbol="NASDAQ:MSFT" data-trend="核心持倉" data-score="80" data-scenario="MSFT 是目前最大部位，先看 QQQ 與 MSFT 自身日線結構；若跌破最近 OB，組合要先降風險。">
+            <h4>MSFT <span>17.0% 最大部位</span></h4>
+            <p>核心持倉，不需要每次波動都動，但它是帳戶風險錨。SMC 上優先看日線 BOS 是否延續，回測需求區能守住才偏多。</p>
+            <div class="analysis-tags"><span>核心</span><span>看 QQQ</span><span>OB 失守先降風險</span></div>
+          </article>
+          <article class="analysis-card" data-symbol="SOFI" data-market="美股" data-tv-symbol="NASDAQ:SOFI" data-trend="高 beta 成長" data-score="66" data-scenario="SOFI 權重第二，適合等掃低回收與小級別 BOS；若大盤轉弱，它會放大回撤。">
+            <h4>SOFI <span>13.2% 高 beta</span></h4>
+            <p>金融科技題材，彈性大但也容易被大盤風險情緒拖著走。不要在 Premium 追，等 Discount 或區間下緣掃單後再觀察。</p>
+            <div class="analysis-tags"><span>高波動</span><span>掃低回收</span><span>避免追高</span></div>
+          </article>
+          <article class="analysis-card" data-symbol="SPCX" data-market="美股" data-tv-symbol="NYSEARCA:SPCX" data-trend="題材 ETF" data-score="59" data-scenario="SPCX 權重 12.3%，目前比較像題材曝險；用區間上下緣與 SPY 方向確認，不單獨重壓。">
+            <h4>SPCX <span>12.3% 題材曝險</span></h4>
+            <p>太空/SPAC 題材要更重視流動性位置。若標的本身量能不足，優先用 SPY/QQQ 的大結構判斷是否適合承擔風險。</p>
+            <div class="analysis-tags"><span>題材</span><span>看大盤</span><span>區間交易</span></div>
+          </article>
+          <article class="analysis-card" data-symbol="RKLB" data-market="美股" data-tv-symbol="NASDAQ:RKLB" data-trend="題材強勢股" data-score="64" data-scenario="RKLB 權重 11.6%，若掃高後不能延續，要防 MSS；乾淨位置是 OB 回測而不是長紅追價。">
+            <h4>RKLB <span>11.6% 航太題材</span></h4>
+            <p>適合用「掃高是否延續」判斷情緒。若出現 Liquidity Grab 後跌回區間，要把它當作減碼訊號，而不是加碼理由。</p>
+            <div class="analysis-tags"><span>航太</span><span>高 beta</span><span>掃高觀察</span></div>
+          </article>
+          <article class="analysis-card" data-symbol="PLTR" data-market="美股" data-tv-symbol="NASDAQ:PLTR" data-trend="AI 題材衛星" data-score="63" data-scenario="PLTR 是 AI 題材衛星部位，與 QQQ/NVDA 情緒連動；若科技股 MSS，它的反彈要保守看。">
+            <h4>PLTR <span>4.8% AI 題材</span></h4>
+            <p>權重不大，但題材敏感。用 QQQ、NVDA 當背景確認；如果 AI 主線仍 BOS，PLTR 回測 OB 才有比較好的風險報酬。</p>
+            <div class="analysis-tags"><span>AI</span><span>看 NVDA/QQQ</span><span>衛星部位</span></div>
+          </article>
+          <article class="analysis-card" data-symbol="台積電" data-market="台股" data-tv-symbol="TWSE:2330" data-trend="台股主結構" data-score="76" data-scenario="台積電是台股主結構核心；若它維持 BOS，加權與 AI 伺服器鏈才有比較好的延續條件。">
+            <h4>台積電 2330 <span>台股核心</span></h4>
+            <p>台股最重要的結構錨。先看它是否守住日線 OB，再決定台股其他 AI 硬體鏈能不能跟；開高進 Premium 時不追。</p>
+            <div class="analysis-tags"><span>台股錨</span><span>半導體</span><span>看加權</span></div>
+          </article>
+          <article class="analysis-card" data-symbol="鴻海" data-market="台股" data-tv-symbol="TWSE:2317" data-trend="AI 伺服器鏈" data-score="64" data-scenario="鴻海適合作為台股 AI 硬體鏈觀察，若加權與台積電同步 BOS，回測 OB 可列追蹤。">
+            <h4>鴻海 2317 <span>AI 伺服器鏈</span></h4>
+            <p>比台積電更偏題材與資金輪動。適合等大盤結構確認後找回測，不適合在區間中間追。</p>
+            <div class="analysis-tags"><span>AI 硬體</span><span>回測 OB</span><span>跟隨盤勢</span></div>
+          </article>
+          <article class="analysis-card" data-symbol="緯創" data-market="台股" data-tv-symbol="TWSE:3231" data-trend="高 beta 台股 AI" data-score="60" data-scenario="緯創波動偏大，先看是否掃低回收或突破後回測；若只是在區間中間，先觀望。">
+            <h4>緯創 3231 <span>高 beta AI</span></h4>
+            <p>波動大、題材強，最需要等流動性掃完。適合用小週期確認 BOS/MSS，不適合作為第一個重倉標的。</p>
+            <div class="analysis-tags"><span>高 beta</span><span>流動性優先</span><span>小倉位</span></div>
+          </article>
+        </div>
+      </section>
+
       <section class="panel strategy-section" aria-label="SMC 策略圖解">
         <div class="panel-head">
           <div>
@@ -1337,7 +1501,7 @@
           <small>Playbook</small>
         </div>
         <div class="strategy-grid">
-          <article class="strategy-card">
+          <article class="strategy-card active" data-playbook="劇本 A：趨勢延續做多。確認 HTF HH/HL，等掃低回收與 OB 回測，再看小級別 BOS 進場。">
             <h4>劇本 A：趨勢延續做多</h4>
             <p>高週期維持上升結構，等待價格掃低點後回到 Discount / OB，再用小級別 BOS 確認。</p>
             <div class="strategy-chart">
@@ -1367,7 +1531,7 @@
             </div>
           </article>
 
-          <article class="strategy-card">
+          <article class="strategy-card" data-playbook="劇本 B：掃高反轉做空。價格進 Premium 掃高後，若出現 MSS，回測供給 OB 找空，SL 放掃高點上方。">
             <h4>劇本 B：掃高反轉做空</h4>
             <p>價格先衝進 Premium 掃高點，接著跌破結構形成 MSS；回測供給 OB 時找空。</p>
             <div class="strategy-chart">
@@ -1397,7 +1561,7 @@
             </div>
           </article>
 
-          <article class="strategy-card">
+          <article class="strategy-card" data-playbook="劇本 C：盤整等待突破。區間中間不追，等一側流動性被掃，再看 BOS/MSS 與 OB 回測。">
             <h4>劇本 C：盤整等待突破</h4>
             <p>行情在區間累積訂單時，不急著進場；等一側流動性被掃，再看 BOS 或 MSS 決定方向。</p>
             <div class="strategy-chart">
@@ -1498,21 +1662,21 @@
                 </tr>
               </thead>
               <tbody>
-                <tr><td><span class="asset-name"><strong>MSFTX</strong><span>微軟</span></span></td><td>0.173664</td><td>$391.21</td><td>$67.94</td><td class="weight-cell">17.0%<div class="weight-track"><span style="width:100%"></span></div></td><td class="flat">0.0%</td></tr>
-                <tr><td><span class="asset-name"><strong>SOFIX</strong><span>SoFi</span></span></td><td>2.883878</td><td>$18.25</td><td>$52.63</td><td class="weight-cell">13.2%<div class="weight-track"><span style="width:77.6%"></span></div></td><td class="flat">0.0%</td></tr>
-                <tr><td><span class="asset-name"><strong>SPCX</strong><span>太空/SPAC</span></span></td><td>0.307056</td><td>$159.93</td><td>$49.11</td><td class="weight-cell">12.3%<div class="weight-track"><span style="width:72.4%"></span></div></td><td class="down">-0.5%</td></tr>
-                <tr><td><span class="asset-name"><strong>RKLBX</strong><span>Rocket Lab</span></span></td><td>0.460235</td><td>$100.33</td><td>$46.18</td><td class="weight-cell">11.6%<div class="weight-track"><span style="width:68.2%"></span></div></td><td class="flat">0.0%</td></tr>
-                <tr><td><span class="asset-name"><strong>HIMSX</strong><span>Hims & Hers</span></span></td><td>0.900810</td><td>$37.06</td><td>$33.38</td><td class="weight-cell">8.4%<div class="weight-track"><span style="width:49.4%"></span></div></td><td class="flat">0.0%</td></tr>
-                <tr><td><span class="asset-name"><strong>ONDSX</strong><span>Ondas</span></span></td><td>3.749440</td><td>$7.47</td><td>$28.01</td><td class="weight-cell">7.0%<div class="weight-track"><span style="width:41.2%"></span></div></td><td class="flat">0.0%</td></tr>
-                <tr><td><span class="asset-name"><strong>QQQX</strong><span>納指100 ETF</span></span></td><td>0.030099</td><td>$715.00</td><td>$21.52</td><td class="weight-cell">5.4%<div class="weight-track"><span style="width:31.8%"></span></div></td><td class="flat">0.0%</td></tr>
-                <tr><td><span class="asset-name"><strong>PLTRX</strong><span>Palantir</span></span></td><td>0.148566</td><td>$129.95</td><td>$19.31</td><td class="weight-cell">4.8%<div class="weight-track"><span style="width:28.2%"></span></div></td><td class="flat">0.0%</td></tr>
-                <tr><td><span class="asset-name"><strong>NVOX</strong><span>諾和諾德</span></span></td><td>0.353412</td><td>$50.34</td><td>$17.79</td><td class="weight-cell">4.5%<div class="weight-track"><span style="width:26.5%"></span></div></td><td class="flat">0.0%</td></tr>
-                <tr><td><span class="asset-name"><strong>NFLXX</strong><span>奈飛</span></span></td><td>0.174825</td><td>$77.72</td><td>$13.59</td><td class="weight-cell">3.4%<div class="weight-track"><span style="width:20.0%"></span></div></td><td class="flat">0.0%</td></tr>
-                <tr><td><span class="asset-name"><strong>ADA</strong><span>艾達幣</span></span></td><td>66.140013</td><td>$0.1775</td><td>$11.74</td><td class="weight-cell">2.9%<div class="weight-track"><span style="width:17.1%"></span></div></td><td class="up">+4.9%</td></tr>
-                <tr><td><span class="asset-name"><strong>CRCLX</strong><span>Circle</span></span></td><td>0.167227</td><td>$64.97</td><td>$10.86</td><td class="weight-cell">2.7%<div class="weight-track"><span style="width:15.9%"></span></div></td><td class="flat">0.0%</td></tr>
-                <tr><td><span class="asset-name"><strong>ETH</strong><span>以太坊</span></span></td><td>0.005640</td><td>$1,763.11</td><td>$9.94</td><td class="weight-cell">2.5%<div class="weight-track"><span style="width:14.7%"></span></div></td><td class="up">+1.5%</td></tr>
+                <tr data-symbol="MSFT" data-market="美股" data-tv-symbol="NASDAQ:MSFT" data-trend="核心持倉" data-score="80" data-scenario="MSFTX 對應微軟，為目前最大部位；先看 MSFT 與 QQQ 是否維持 BOS，跌破 OB 先降風險。"><td><span class="asset-name"><strong>MSFTX</strong><span>微軟</span></span></td><td>0.173664</td><td>$391.21</td><td>$67.94</td><td class="weight-cell">17.0%<div class="weight-track"><span style="width:100%"></span></div></td><td class="flat">0.0%</td></tr>
+                <tr data-symbol="SOFI" data-market="美股" data-tv-symbol="NASDAQ:SOFI" data-trend="高 beta 成長" data-score="66" data-scenario="SOFIX 對應 SoFi，權重第二；只在 Discount 或掃低回收後追蹤，不適合高位追價。"><td><span class="asset-name"><strong>SOFIX</strong><span>SoFi</span></span></td><td>2.883878</td><td>$18.25</td><td>$52.63</td><td class="weight-cell">13.2%<div class="weight-track"><span style="width:77.6%"></span></div></td><td class="flat">0.0%</td></tr>
+                <tr data-symbol="SPCX" data-market="美股" data-tv-symbol="NYSEARCA:SPCX" data-trend="題材 ETF" data-score="59" data-scenario="SPCX 是題材曝險，優先用 SPY/QQQ 判斷大盤方向，區間中間不加碼。"><td><span class="asset-name"><strong>SPCX</strong><span>太空/SPAC</span></span></td><td>0.307056</td><td>$159.93</td><td>$49.11</td><td class="weight-cell">12.3%<div class="weight-track"><span style="width:72.4%"></span></div></td><td class="down">-0.5%</td></tr>
+                <tr data-symbol="RKLB" data-market="美股" data-tv-symbol="NASDAQ:RKLB" data-trend="題材強勢股" data-score="64" data-scenario="RKLBX 對應 Rocket Lab，若掃高後不能延續，要防 MSS；回測 OB 比追長紅乾淨。"><td><span class="asset-name"><strong>RKLBX</strong><span>Rocket Lab</span></span></td><td>0.460235</td><td>$100.33</td><td>$46.18</td><td class="weight-cell">11.6%<div class="weight-track"><span style="width:68.2%"></span></div></td><td class="flat">0.0%</td></tr>
+                <tr data-symbol="HIMS" data-market="美股" data-tv-symbol="NYSE:HIMS" data-trend="成長股觀察" data-score="61" data-scenario="HIMSX 適合用區間上下緣觀察流動性；回到 Discount 並守住結構再提高信心。"><td><span class="asset-name"><strong>HIMSX</strong><span>Hims & Hers</span></span></td><td>0.900810</td><td>$37.06</td><td>$33.38</td><td class="weight-cell">8.4%<div class="weight-track"><span style="width:49.4%"></span></div></td><td class="flat">0.0%</td></tr>
+                <tr data-symbol="ONDS" data-market="美股" data-tv-symbol="NASDAQ:ONDS" data-trend="小型高波動" data-score="55" data-scenario="ONDSX 權重 7%，屬較高波動衛星；若大盤轉弱，先看它是否跌破最近需求區。"><td><span class="asset-name"><strong>ONDSX</strong><span>Ondas</span></span></td><td>3.749440</td><td>$7.47</td><td>$28.01</td><td class="weight-cell">7.0%<div class="weight-track"><span style="width:41.2%"></span></div></td><td class="flat">0.0%</td></tr>
+                <tr data-symbol="QQQ" data-market="美股" data-tv-symbol="NASDAQ:QQQ" data-trend="科技指數曝險" data-score="69" data-scenario="QQQX 可用 QQQ 當追蹤圖，若 QQQ 掃高轉弱，成長股部位要一起降風險。"><td><span class="asset-name"><strong>QQQX</strong><span>納指100 ETF</span></span></td><td>0.030099</td><td>$715.00</td><td>$21.52</td><td class="weight-cell">5.4%<div class="weight-track"><span style="width:31.8%"></span></div></td><td class="flat">0.0%</td></tr>
+                <tr data-symbol="PLTR" data-market="美股" data-tv-symbol="NASDAQ:PLTR" data-trend="AI 題材衛星" data-score="63" data-scenario="PLTRX 對應 Palantir，與 QQQ/NVDA 情緒連動；等回測 OB 比追高安全。"><td><span class="asset-name"><strong>PLTRX</strong><span>Palantir</span></span></td><td>0.148566</td><td>$129.95</td><td>$19.31</td><td class="weight-cell">4.8%<div class="weight-track"><span style="width:28.2%"></span></div></td><td class="flat">0.0%</td></tr>
+                <tr data-symbol="NVO" data-market="美股" data-tv-symbol="NYSE:NVO" data-trend="防禦成長" data-score="58" data-scenario="NVOX 屬較不同題材，可作分散；用自身結構，不必完全跟 QQQ 同步。"><td><span class="asset-name"><strong>NVOX</strong><span>諾和諾德</span></span></td><td>0.353412</td><td>$50.34</td><td>$17.79</td><td class="weight-cell">4.5%<div class="weight-track"><span style="width:26.5%"></span></div></td><td class="flat">0.0%</td></tr>
+                <tr data-symbol="NFLX" data-market="美股" data-tv-symbol="NASDAQ:NFLX" data-trend="大型成長股" data-score="57" data-scenario="NFLXX 對應 Netflix，權重較小；若走獨立強勢，回測 OB 可觀察，不必優先加碼。"><td><span class="asset-name"><strong>NFLXX</strong><span>奈飛</span></span></td><td>0.174825</td><td>$77.72</td><td>$13.59</td><td class="weight-cell">3.4%<div class="weight-track"><span style="width:20.0%"></span></div></td><td class="flat">0.0%</td></tr>
+                <tr data-symbol="ADAUSDT" data-market="加密" data-tv-symbol="BINANCE:ADAUSDT" data-trend="加密衛星" data-score="52" data-scenario="ADA 權重不大但 24h 彈性高；用 BTC/ETH 作背景，避免單獨追高。"><td><span class="asset-name"><strong>ADA</strong><span>艾達幣</span></span></td><td>66.140013</td><td>$0.1775</td><td>$11.74</td><td class="weight-cell">2.9%<div class="weight-track"><span style="width:17.1%"></span></div></td><td class="up">+4.9%</td></tr>
+                <tr data-symbol="CRCL" data-market="美股" data-tv-symbol="NYSE:CRCL" data-trend="新上市題材" data-score="54" data-scenario="CRCLX 權重小，若即時資料可用再看；新股/題材股優先控風險。"><td><span class="asset-name"><strong>CRCLX</strong><span>Circle</span></span></td><td>0.167227</td><td>$64.97</td><td>$10.86</td><td class="weight-cell">2.7%<div class="weight-track"><span style="width:15.9%"></span></div></td><td class="flat">0.0%</td></tr>
+                <tr data-symbol="ETHUSDT" data-market="加密" data-tv-symbol="BINANCE:ETHUSDT" data-trend="加密核心" data-score="78" data-scenario="ETH 權重小但可作加密風向；若 BTC/ETH 同步 BOS，再看 ADA/SOL 衛星。"><td><span class="asset-name"><strong>ETH</strong><span>以太坊</span></span></td><td>0.005640</td><td>$1,763.11</td><td>$9.94</td><td class="weight-cell">2.5%<div class="weight-track"><span style="width:14.7%"></span></div></td><td class="up">+1.5%</td></tr>
                 <tr><td><span class="asset-name"><strong>USDT</strong><span>現金</span></span></td><td>8.600750</td><td>$1.00</td><td>$8.60</td><td class="weight-cell">2.2%<div class="weight-track"><span style="width:12.9%"></span></div></td><td>--</td></tr>
-                <tr><td><span class="asset-name"><strong>METAX</strong><span>Meta</span></span></td><td>0.012369</td><td>$585.36</td><td>$7.24</td><td class="weight-cell">1.8%<div class="weight-track"><span style="width:10.6%"></span></div></td><td class="flat">0.0%</td></tr>
+                <tr data-symbol="META" data-market="美股" data-tv-symbol="NASDAQ:META" data-trend="大型科技衛星" data-score="60" data-scenario="METAX 對應 Meta，權重小但與 QQQ 情緒連動；若 QQQ 延續，回測可觀察。"><td><span class="asset-name"><strong>METAX</strong><span>Meta</span></span></td><td>0.012369</td><td>$585.36</td><td>$7.24</td><td class="weight-cell">1.8%<div class="weight-track"><span style="width:10.6%"></span></div></td><td class="flat">0.0%</td></tr>
                 <tr><td><span class="asset-name"><strong>其他尾倉</strong><span>零碎部位</span></span></td><td>--</td><td>--</td><td>$1.67</td><td class="weight-cell">0.4%<div class="weight-track"><span style="width:2.4%"></span></div></td><td>--</td></tr>
               </tbody>
             </table>
@@ -1564,6 +1728,8 @@
   <script>
     const symbols = document.querySelectorAll(".symbol");
     const macroCards = document.querySelectorAll(".macro-card");
+    const analysisCards = document.querySelectorAll(".analysis-card");
+    const portfolioRows = document.querySelectorAll(".portfolio-table tbody tr[data-tv-symbol]");
     const symbolTitle = document.querySelector("#symbolTitle");
     const marketTitle = document.querySelector("#marketTitle");
     const trendValue = document.querySelector("#trendValue");
@@ -1693,23 +1859,53 @@
       container.appendChild(widgetContainer);
     }
 
+    function selectInstrument(source) {
+      const data = source.dataset;
+      if (!data.tvSymbol) return;
+
+      symbols.forEach((item) => {
+        item.classList.toggle("active", item.dataset.tvSymbol === data.tvSymbol || item.dataset.symbol === data.symbol);
+      });
+      macroCards.forEach((card) => {
+        card.classList.toggle("active", card.dataset.marketCard === data.market);
+      });
+      analysisCards.forEach((card) => {
+        card.classList.toggle("active", card.dataset.tvSymbol === data.tvSymbol);
+      });
+
+      const copy = marketCopy[data.market] || marketCopy["大行情"];
+      symbolTitle.textContent = data.symbol || data.tvSymbol;
+      marketTitle.textContent = `${data.market || "大行情"} `;
+      trendValue.textContent = data.trend || "追蹤中";
+      kpiScore.textContent = data.score || "--";
+      trendNote.textContent = copy.trendNote;
+      marketConfirm.textContent = copy.confirm;
+      marketNote.textContent = copy.note;
+      scenarioText.textContent = `目前劇本：${data.scenario || "切到即時圖後，先標出高低點、流動性與最近 OB，再決定劇本。"}`;
+      renderLiveChart(data.tvSymbol, currentInterval);
+    }
+
     symbols.forEach((button) => {
-      button.addEventListener("click", () => {
-        symbols.forEach((item) => item.classList.remove("active"));
-        button.classList.add("active");
-        macroCards.forEach((card) => {
-          card.classList.toggle("active", card.dataset.marketCard === button.dataset.market);
-        });
-        const copy = marketCopy[button.dataset.market] || marketCopy["大行情"];
-        symbolTitle.textContent = button.dataset.symbol;
-        marketTitle.textContent = `${button.dataset.market} `;
-        trendValue.textContent = button.dataset.trend;
-        kpiScore.textContent = button.dataset.score;
-        trendNote.textContent = copy.trendNote;
-        marketConfirm.textContent = copy.confirm;
-        marketNote.textContent = copy.note;
-        scenarioText.textContent = `目前劇本：${button.dataset.scenario}`;
-        renderLiveChart(button.dataset.tvSymbol || "AMEX:SPY", currentInterval);
+      button.addEventListener("click", () => selectInstrument(button));
+    });
+
+    macroCards.forEach((card) => {
+      card.addEventListener("click", () => selectInstrument(card));
+    });
+
+    analysisCards.forEach((card) => {
+      card.addEventListener("click", () => selectInstrument(card));
+    });
+
+    portfolioRows.forEach((row) => {
+      row.addEventListener("click", () => selectInstrument(row));
+    });
+
+    document.querySelectorAll(".strategy-card").forEach((card) => {
+      card.addEventListener("click", () => {
+        document.querySelectorAll(".strategy-card").forEach((item) => item.classList.remove("active"));
+        card.classList.add("active");
+        scenarioText.textContent = card.dataset.playbook;
       });
     });
 
@@ -1718,8 +1914,16 @@
         chip.addEventListener("click", () => {
           group.querySelectorAll(".chip").forEach((item) => item.classList.remove("active"));
           chip.classList.add("active");
-          if (group.id === "chartInterval") {
-            renderLiveChart(currentTvSymbol, chip.dataset.interval || "60");
+          if (chip.dataset.interval) {
+            currentInterval = chip.dataset.interval;
+            document.querySelectorAll(`.chip[data-interval="${currentInterval}"]`).forEach((item) => {
+              const parent = item.closest(".controls");
+              if (parent) {
+                parent.querySelectorAll(".chip").forEach((peer) => peer.classList.remove("active"));
+              }
+              item.classList.add("active");
+            });
+            renderLiveChart(currentTvSymbol, currentInterval);
           }
         });
       });
