@@ -490,6 +490,60 @@
       display: block;
     }
 
+    .smc-line-body {
+      display: grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(280px, .75fr);
+      gap: 0;
+      align-items: stretch;
+    }
+
+    .smc-explain {
+      border-left: 1px solid var(--line);
+      padding: 13px;
+      background: rgba(0, 0, 0, .14);
+      display: grid;
+      gap: 12px;
+      align-content: start;
+    }
+
+    .smc-explain-block {
+      display: grid;
+      gap: 5px;
+    }
+
+    .smc-explain-block span {
+      color: var(--gold);
+      font-size: 12px;
+      font-weight: 780;
+    }
+
+    .smc-explain-block p {
+      margin: 0;
+      color: #dce3e3;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .term-grid {
+      display: grid;
+      gap: 7px;
+    }
+
+    .term {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 8px;
+      background: rgba(255,255,255,.035);
+      font-size: 11px;
+      line-height: 1.45;
+      color: #c7d0d0;
+    }
+
+    .term strong {
+      color: var(--text);
+      margin-right: 4px;
+    }
+
     .smc-line-foot {
       display: grid;
       grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -1171,6 +1225,15 @@
         grid-template-columns: 1fr;
       }
 
+      .smc-line-body {
+        grid-template-columns: 1fr;
+      }
+
+      .smc-explain {
+        border-left: 0;
+        border-top: 1px solid var(--line);
+      }
+
       .strategy-grid {
         grid-template-columns: 1fr;
       }
@@ -1427,7 +1490,24 @@
                 <h4 id="smcLineTitle">SMC 線圖分析：全球風險盤</h4>
                 <span id="smcLineMode">劇本 A / 趨勢延續</span>
               </div>
-              <div class="smc-line-chart" id="smcLineChart"></div>
+              <div class="smc-line-body">
+                <div class="smc-line-chart" id="smcLineChart"></div>
+                <div class="smc-explain" aria-label="SMC 白話解釋">
+                  <div class="smc-explain-block">
+                    <span>這張圖在說什麼</span>
+                    <p id="smcExplainMain">先確認大方向偏多，再等價格掃掉短線低點後收回，回到 OB 附近才規劃進場。</p>
+                  </div>
+                  <div class="smc-explain-block">
+                    <span>什麼時候不要做</span>
+                    <p id="smcExplainAvoid">如果價格沒有掃單、也沒有重新站回結構，就不要提前猜底。</p>
+                  </div>
+                  <div class="term-grid" id="smcTerms">
+                    <div class="term"><strong>Liquidity</strong> 前高/前低附近的停損與追單。</div>
+                    <div class="term"><strong>BOS</strong> 突破關鍵高低點，代表結構延續。</div>
+                    <div class="term"><strong>OB</strong> 大資金推動前留下的回測區。</div>
+                  </div>
+                </div>
+              </div>
               <div class="smc-line-foot">
                 <span id="smcStep1">1. 找前高/前低流動性</span>
                 <span id="smcStep2">2. 等掃單後收回</span>
@@ -1792,6 +1872,22 @@
       </div>
 
       <div>
+        <div class="nav-title">白話速查</div>
+        <div class="concept">
+          <h4>先不要急著進場 <span class="mini">順序</span></h4>
+          <p>先看大方向，再看有沒有掃流動性，最後才看 OB 回測。順序錯了，就會變成在猜。</p>
+        </div>
+        <div class="concept">
+          <h4>掃單不是訊號本身 <span class="mini">陷阱</span></h4>
+          <p>掃高或掃低只是第一步，要再看收不收得回來，以及後面有沒有 BOS/MSS。</p>
+        </div>
+        <div class="concept">
+          <h4>OB 是風控工具 <span class="mini">止損</span></h4>
+          <p>OB 好用的地方是能定義「錯了在哪裡」。如果止損說不清楚，通常不是好位置。</p>
+        </div>
+      </div>
+
+      <div>
         <div class="nav-title">Session Journal</div>
         <div class="journal">
           <div class="entry"><div class="time">09:15</div><div><strong>高週期偏多</strong><span>4H 仍維持 HH/HL，1H 回踩未破結構。</span></div></div>
@@ -1821,6 +1917,9 @@
     const smcLineChart = document.querySelector("#smcLineChart");
     const smcLineTitle = document.querySelector("#smcLineTitle");
     const smcLineMode = document.querySelector("#smcLineMode");
+    const smcExplainMain = document.querySelector("#smcExplainMain");
+    const smcExplainAvoid = document.querySelector("#smcExplainAvoid");
+    const smcTerms = document.querySelector("#smcTerms");
     const smcSteps = [
       document.querySelector("#smcStep1"),
       document.querySelector("#smcStep2"),
@@ -1858,6 +1957,14 @@
       bullish: {
         mode: "劇本 A / 趨勢延續做多",
         steps: ["HTF 保持 HH/HL", "掃前低後快速收回", "小級別重新 BOS", "回測 Demand OB 進場", "SL 放 OB 下緣，TP 看前高流動性"],
+        explain: "這是偏多行情的標準等回檔。重點不是看到上漲就追，而是等價格先往下掃掉短線停損，再重新收回，代表下方流動性被拿走後買盤接回來。",
+        avoid: "如果價格一路跌破 OB、沒有快速收回，或小級別沒有重新 BOS，就不要把它當作回檔買點，因為可能已經從延續變成反轉。",
+        terms: [
+          ["Liquidity", "前低附近通常有多單停損與空單追單，價格常先去掃那裡。"],
+          ["BOS", "重新突破前一個有效高點，表示多方結構又接回來。"],
+          ["Demand OB", "可以想成多方大資金曾經發動的位置，回測時才有風險報酬。"],
+          ["SL / TP", "止損放 OB 下方，目標看前高或下一個流動性池。"]
+        ],
         svg: `
           <svg viewBox="0 0 1000 430" role="img" aria-label="SMC bullish line analysis">
             <rect x="0" y="260" width="1000" height="170" fill="rgba(103,215,213,.13)"/>
@@ -1882,6 +1989,14 @@
       bearish: {
         mode: "劇本 B / 掃高反轉做空",
         steps: ["價格進 Premium", "掃前高但無法延續", "跌破結構形成 MSS", "回測 Supply OB 找空", "SL 放掃高點上，TP 看下方流動性"],
+        explain: "這是高位誘多後轉弱。價格先衝上去掃前高，讓追多的人進場、空單停損被打掉；如果之後快速跌破結構，就代表那次上衝可能只是拿流動性。",
+        avoid: "只有掃高還不能直接空。一定要等 MSS 或明確跌破結構，否則它可能只是強勢突破。沒有回測到合理 Supply OB 時，也不要在低位追空。",
+        terms: [
+          ["Premium", "相對波段上半部，追多風險較高，比較適合觀察空方訊號。"],
+          ["Liquidity Grab", "刺破前高但收不住，像是把停損和追單一次吸走。"],
+          ["MSS", "市場結構轉變，原本偏多的高低點節奏被破壞。"],
+          ["Supply OB", "空方發動下跌前的供給區，回測時才找空。"]
+        ],
         svg: `
           <svg viewBox="0 0 1000 430" role="img" aria-label="SMC bearish line analysis">
             <rect x="0" y="0" width="1000" height="155" fill="rgba(179,160,190,.20)"/>
@@ -1905,6 +2020,14 @@
       range: {
         mode: "劇本 C / 盤整等待突破",
         steps: ["標出區間高低", "中間不追單", "等上緣或下緣被掃", "看 BOS 或 MSS 決方向", "突破後回測 OB 再做"],
+        explain: "這是盤整行情。區間中間最容易被來回洗，所以先只畫上緣和下緣。等價格掃掉某一側流動性後，再看它是突破延續，還是掃完反轉。",
+        avoid: "不要在區間中間因為一兩根 K 線就追單。沒有掃單、沒有 BOS/MSS、沒有回測 OB 時，方向通常還不夠乾淨。",
+        terms: [
+          ["Consolidation", "價格在區間內來回，代表訂單正在累積。"],
+          ["Range High/Low", "區間上緣和下緣，是最多停損與追單的位置。"],
+          ["Expansion", "盤整後真正離開區間的推動段。"],
+          ["Retest OB", "突破後回測原本的發動區，才是比較可控的位置。"]
+        ],
         svg: `
           <svg viewBox="0 0 1000 430" role="img" aria-label="SMC range line analysis">
             <rect x="110" y="95" width="560" height="205" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.28)" stroke-width="2"/>
@@ -1938,6 +2061,9 @@
       smcLineTitle.textContent = `SMC 線圖分析：${label || "目前標的"}`;
       smcLineMode.textContent = playbook.mode;
       smcLineChart.innerHTML = playbook.svg;
+      smcExplainMain.textContent = playbook.explain;
+      smcExplainAvoid.textContent = playbook.avoid;
+      smcTerms.innerHTML = playbook.terms.map(([term, explain]) => `<div class="term"><strong>${term}</strong>${explain}</div>`).join("");
       playbook.steps.forEach((step, index) => {
         smcSteps[index].textContent = `${index + 1}. ${step}`;
       });
