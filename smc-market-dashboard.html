@@ -446,6 +446,67 @@
       overflow: hidden;
     }
 
+    .smc-line-panel {
+      margin-top: 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .035);
+      overflow: hidden;
+    }
+
+    .smc-line-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 11px 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .smc-line-head h4 {
+      margin: 0;
+      font-size: 14px;
+    }
+
+    .smc-line-head span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .smc-line-chart {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      min-height: 260px;
+      background:
+        linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px),
+        #596066;
+      background-size: 20% 25%, 12.5% 100%;
+    }
+
+    .smc-line-chart svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .smc-line-foot {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+      padding: 10px 12px 12px;
+    }
+
+    .smc-line-foot span {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 7px 8px;
+      color: #dce3e3;
+      background: rgba(0, 0, 0, .16);
+      font-size: 11px;
+      line-height: 1.35;
+    }
+
     .smc-live-notes {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -1163,6 +1224,7 @@
       .kpi-row,
       .macro-grid,
       .smc-live-notes,
+      .smc-line-foot,
       .source-strip {
         grid-template-columns: repeat(2, 1fr);
       }
@@ -1177,6 +1239,7 @@
       .kpi-row,
       .macro-grid,
       .smc-live-notes,
+      .smc-line-foot,
       .source-strip {
         grid-template-columns: 1fr;
       }
@@ -1357,6 +1420,20 @@
                   <strong>等待即時行情元件</strong>
                   <span>需要網路連線載入 TradingView；載入後會顯示可縮放、可切週期的即時 K 線。</span>
                 </div>
+              </div>
+            </div>
+            <div class="smc-line-panel">
+              <div class="smc-line-head">
+                <h4 id="smcLineTitle">SMC 線圖分析：全球風險盤</h4>
+                <span id="smcLineMode">劇本 A / 趨勢延續</span>
+              </div>
+              <div class="smc-line-chart" id="smcLineChart"></div>
+              <div class="smc-line-foot">
+                <span id="smcStep1">1. 找前高/前低流動性</span>
+                <span id="smcStep2">2. 等掃單後收回</span>
+                <span id="smcStep3">3. 確認 BOS 或 MSS</span>
+                <span id="smcStep4">4. 回測 OB / FVG</span>
+                <span id="smcStep5">5. 設定 SL 與 TP</span>
               </div>
             </div>
             <div class="ticker-tape" id="tickerTape"></div>
@@ -1741,6 +1818,16 @@
     const liveSymbolName = document.querySelector("#liveSymbolName");
     const liveStatus = document.querySelector("#liveStatus");
     const liveFallback = document.querySelector("#liveFallback");
+    const smcLineChart = document.querySelector("#smcLineChart");
+    const smcLineTitle = document.querySelector("#smcLineTitle");
+    const smcLineMode = document.querySelector("#smcLineMode");
+    const smcSteps = [
+      document.querySelector("#smcStep1"),
+      document.querySelector("#smcStep2"),
+      document.querySelector("#smcStep3"),
+      document.querySelector("#smcStep4"),
+      document.querySelector("#smcStep5")
+    ];
     let currentTvSymbol = "AMEX:SPY";
     let currentInterval = "60";
 
@@ -1766,6 +1853,95 @@
         trendNote: "跟隨風險偏好，波動放大"
       }
     };
+
+    const smcPlaybooks = {
+      bullish: {
+        mode: "劇本 A / 趨勢延續做多",
+        steps: ["HTF 保持 HH/HL", "掃前低後快速收回", "小級別重新 BOS", "回測 Demand OB 進場", "SL 放 OB 下緣，TP 看前高流動性"],
+        svg: `
+          <svg viewBox="0 0 1000 430" role="img" aria-label="SMC bullish line analysis">
+            <rect x="0" y="260" width="1000" height="170" fill="rgba(103,215,213,.13)"/>
+            <rect x="0" y="0" width="1000" height="135" fill="rgba(179,160,190,.18)"/>
+            <line x1="30" y1="215" x2="970" y2="215" stroke="rgba(255,255,255,.45)" stroke-dasharray="8 8"/>
+            <polyline points="45,335 135,260 215,292 318,178 425,238 505,342 585,258 690,198 812,112 952,82" fill="none" stroke="#f4f7f4" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+            <line x1="285" y1="178" x2="454" y2="178" stroke="#67d7d5" stroke-width="3" stroke-dasharray="7 7"/>
+            <rect x="455" y="302" width="178" height="66" fill="rgba(215,189,98,.20)" stroke="#d7bd62" stroke-width="2"/>
+            <line x1="470" y1="378" x2="650" y2="378" stroke="#f05a5a" stroke-width="3"/>
+            <line x1="790" y1="82" x2="965" y2="82" stroke="#42c778" stroke-width="3"/>
+            <circle cx="505" cy="342" r="10" fill="#f05a5a"/>
+            <circle cx="585" cy="258" r="10" fill="#42c778"/>
+            <text x="44" y="34" fill="#b3a0be" font-size="20" font-weight="800">Premium：目標 / 減碼</text>
+            <text x="42" y="405" fill="#67d7d5" font-size="20" font-weight="800">Discount：只找多</text>
+            <text x="305" y="166" fill="#67d7d5" font-size="20" font-weight="900">BOS</text>
+            <text x="468" y="295" fill="#efe27b" font-size="18" font-weight="900">Demand OB / Entry</text>
+            <text x="493" y="397" fill="#f05a5a" font-size="17" font-weight="900">SL</text>
+            <text x="812" y="70" fill="#42c778" font-size="17" font-weight="900">TP 前高流動性</text>
+            <text x="526" y="338" fill="#fff" font-size="16" font-weight="800">掃低後收回</text>
+          </svg>`
+      },
+      bearish: {
+        mode: "劇本 B / 掃高反轉做空",
+        steps: ["價格進 Premium", "掃前高但無法延續", "跌破結構形成 MSS", "回測 Supply OB 找空", "SL 放掃高點上，TP 看下方流動性"],
+        svg: `
+          <svg viewBox="0 0 1000 430" role="img" aria-label="SMC bearish line analysis">
+            <rect x="0" y="0" width="1000" height="155" fill="rgba(179,160,190,.20)"/>
+            <rect x="0" y="270" width="1000" height="160" fill="rgba(103,215,213,.12)"/>
+            <line x1="30" y1="215" x2="970" y2="215" stroke="rgba(255,255,255,.45)" stroke-dasharray="8 8"/>
+            <polyline points="48,330 140,248 232,280 340,150 450,84 550,178 650,292 745,225 930,348" fill="none" stroke="#f4f7f4" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+            <line x1="330" y1="150" x2="480" y2="150" stroke="#efe27b" stroke-width="3"/>
+            <rect x="525" y="144" width="180" height="70" fill="rgba(240,90,90,.17)" stroke="#f05a5a" stroke-width="2"/>
+            <line x1="585" y1="292" x2="762" y2="292" stroke="#f05a5a" stroke-width="3" stroke-dasharray="7 7"/>
+            <line x1="800" y1="352" x2="965" y2="352" stroke="#42c778" stroke-width="3"/>
+            <circle cx="450" cy="84" r="10" fill="#efe27b"/>
+            <circle cx="745" cy="225" r="10" fill="#f05a5a"/>
+            <text x="44" y="34" fill="#b3a0be" font-size="20" font-weight="800">Premium：掃高 / 找空</text>
+            <text x="360" y="138" fill="#efe27b" font-size="18" font-weight="900">Liquidity Grab</text>
+            <text x="540" y="136" fill="#f05a5a" font-size="18" font-weight="900">Supply OB / Entry</text>
+            <text x="604" y="280" fill="#f05a5a" font-size="20" font-weight="900">MSS</text>
+            <text x="805" y="374" fill="#42c778" font-size="17" font-weight="900">TP 下方流動性</text>
+            <text x="705" y="213" fill="#fff" font-size="16" font-weight="800">回測後轉弱</text>
+          </svg>`
+      },
+      range: {
+        mode: "劇本 C / 盤整等待突破",
+        steps: ["標出區間高低", "中間不追單", "等上緣或下緣被掃", "看 BOS 或 MSS 決方向", "突破後回測 OB 再做"],
+        svg: `
+          <svg viewBox="0 0 1000 430" role="img" aria-label="SMC range line analysis">
+            <rect x="110" y="95" width="560" height="205" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.28)" stroke-width="2"/>
+            <line x1="110" y1="95" x2="670" y2="95" stroke="#efe27b" stroke-width="3"/>
+            <line x1="110" y1="300" x2="670" y2="300" stroke="#67d7d5" stroke-width="3"/>
+            <polyline points="50,242 116,155 195,278 278,130 360,292 442,150 522,260 618,116 680,300 742,205 845,120 952,82" fill="none" stroke="#f4f7f4" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+            <rect x="680" y="276" width="126" height="58" fill="rgba(215,189,98,.18)" stroke="#d7bd62" stroke-width="2"/>
+            <line x1="690" y1="120" x2="862" y2="120" stroke="#42c778" stroke-width="3" stroke-dasharray="7 7"/>
+            <line x1="838" y1="82" x2="970" y2="82" stroke="#42c778" stroke-width="3"/>
+            <circle cx="680" cy="300" r="10" fill="#67d7d5"/>
+            <text x="126" y="82" fill="#efe27b" font-size="18" font-weight="900">上緣流動性</text>
+            <text x="126" y="325" fill="#67d7d5" font-size="18" font-weight="900">下緣流動性</text>
+            <text x="286" y="210" fill="#fff" font-size="28" font-weight="900">Consolidation</text>
+            <text x="702" y="268" fill="#efe27b" font-size="17" font-weight="900">突破後 OB</text>
+            <text x="706" y="108" fill="#42c778" font-size="20" font-weight="900">BOS</text>
+            <text x="835" y="70" fill="#42c778" font-size="17" font-weight="900">Expansion TP</text>
+            <text x="704" y="318" fill="#fff" font-size="16" font-weight="800">先掃下緣</text>
+          </svg>`
+      }
+    };
+
+    function inferSmcPlaybook(data = {}) {
+      const text = `${data.trend || ""} ${data.scenario || ""} ${data.symbol || ""}`;
+      if (/盤整|區間|待破|突破/.test(text)) return "range";
+      if (/反轉|MSS|掃高|過熱|找空|Premium/.test(text)) return "bearish";
+      return "bullish";
+    }
+
+    function renderSmcLineChart(playbookKey, label) {
+      const playbook = smcPlaybooks[playbookKey] || smcPlaybooks.bullish;
+      smcLineTitle.textContent = `SMC 線圖分析：${label || "目前標的"}`;
+      smcLineMode.textContent = playbook.mode;
+      smcLineChart.innerHTML = playbook.svg;
+      playbook.steps.forEach((step, index) => {
+        smcSteps[index].textContent = `${index + 1}. ${step}`;
+      });
+    }
 
     function loadTradingView() {
       return new Promise((resolve, reject) => {
@@ -1882,6 +2058,7 @@
       marketConfirm.textContent = copy.confirm;
       marketNote.textContent = copy.note;
       scenarioText.textContent = `目前劇本：${data.scenario || "切到即時圖後，先標出高低點、流動性與最近 OB，再決定劇本。"}`;
+      renderSmcLineChart(inferSmcPlaybook(data), data.symbol || data.tvSymbol);
       renderLiveChart(data.tvSymbol, currentInterval);
     }
 
@@ -1906,6 +2083,13 @@
         document.querySelectorAll(".strategy-card").forEach((item) => item.classList.remove("active"));
         card.classList.add("active");
         scenarioText.textContent = card.dataset.playbook;
+        if (card.dataset.playbook.includes("掃高反轉")) {
+          renderSmcLineChart("bearish", symbolTitle.textContent);
+        } else if (card.dataset.playbook.includes("盤整等待突破")) {
+          renderSmcLineChart("range", symbolTitle.textContent);
+        } else {
+          renderSmcLineChart("bullish", symbolTitle.textContent);
+        }
       });
     });
 
@@ -1952,6 +2136,7 @@
 
     boxes.forEach((box) => box.addEventListener("change", updateScore));
     updateScore();
+    renderSmcLineChart("bullish", "全球風險盤");
     renderTickerTape();
     renderLiveChart(currentTvSymbol, currentInterval);
   </script>
